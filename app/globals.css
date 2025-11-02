@@ -1,17 +1,22 @@
 @import "tailwindcss";
+@plugin "flowbite-react/plugin/tailwindcss";
+@source "../.flowbite-react/class-list.json";
 
-/* 🌿 VERANO — naturaleza viva, descanso y frescura */
 :root {
-  --anwa-bg: #314432;        /* Fondo principal → para <body>, secciones grandes o fondo general */
-  --anwa-surface: #3F573D;   /* Superficies → navbar, cards, modales o bloques secundarios */
-  --anwa-text: #F4F8F1;      /* Texto principal → títulos, párrafos, íconos, enlaces */
-  --anwa-accent: #A6C48A;    /* Acento → botones, enlaces destacados, bordes, íconos activos */
+  --color1: #5EA529;
+  --color2: #D8F999;
+  --color3: #FAFAF9;
+  --color4: #432004;
+  --color5: #F54927;
+  --color6: #FF692A;
+  
 }
 
-/* ❄️ INVIERNO — calma, piedra, refugio */
 .dark {
-  --anwa-bg: #1C1D1B;        /* Fondo principal → color base de toda la interfaz en modo oscuro */
-  --anwa-surface: #2B2C2A;   /* Superficies → navbar, tarjetas, contenedores secundarios */
-  --anwa-text: #ECECEA;      /* Texto principal → textos, títulos, íconos (contrasta con el fondo roca) */
-  --anwa-accent: #C49A6C;    /* Acento → cobre madera, para botones, hover, enlaces o detalles cálidos */
+  --color1: #1D293D;
+  --color2: #CAD5E2;
+  --color3: #FAFAF9;
+  --color4: #020618;
+  --color5: #FE9A37;
+  --color6: #F0B13B;
 }

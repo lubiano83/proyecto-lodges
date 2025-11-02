@@ -8,8 +8,8 @@ type Props = {
 export default function Address({ address, googleMaps }: Props ) {
     return (
         <div className="flex justify-center items-center gap-1 text-center flex-wrap">
-            <strong>Dirección:</strong> 
-            <Link href={googleMaps} target="_blank" className="hover:text-(--anwa-accent)">
+            <strong>Dirección:</strong>
+            <Link href={googleMaps} target="_blank" className="hover:text-(--color2)">
                 {address}
             </Link>
         </div>

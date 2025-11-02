@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Navbar from "./components/navbar/Navbar";
-import Footer from "./components/footer/Footer";
+import Inicio from "./components/Inicio";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -18,10 +17,10 @@ export default function RootLayout( {children}: Readonly<{children: React.ReactN
   
   return (
     <html lang="es">
-      <body className="min-h-screen grid grid-rows-[auto_1fr_auto] font-serif bg-(--anwa-bg) text-(--anwa-text)">
-        <Navbar />
-        {children}
-        <Footer email={email} address={address} derechos={derechos} googleMaps={googleMaps} />
+      <body className="min-h-screen grid grid-rows-[auto_1fr_auto] font-serif bg-(--color3) text-(--color4)">
+          <Inicio email={email} address={address} derechos={derechos} googleMaps={googleMaps} >
+            {children}
+          </Inicio>
       </body>
     </html>
   );

@@ -12,7 +12,7 @@ type Props = {
 
 export default function Footer({ email, address, derechos, googleMaps }: Props ) {
     return (
-        <footer className='bg-(--anwa-surface) w-full p-8 flex justify-around items-center flex-wrap-reverse gap-4'>
+        <footer className='w-full p-8 flex justify-around items-center flex-wrap-reverse gap-4 bg-(--color1) text-(--color3)'>
             <Derechos derechos={derechos} />
             <Address address={address} googleMaps={googleMaps} />
             <Contact email={email} />
