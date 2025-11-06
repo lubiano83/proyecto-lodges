@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Inicio from "./components/Inicio";
+import { UserProvider } from "./context/user.context";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,11 +18,13 @@ export default function RootLayout( {children}: Readonly<{children: React.ReactN
   
   return (
     <html lang="es">
-      <body className="min-h-screen grid grid-rows-[auto_1fr_auto] font-serif bg-(--color3) text-(--color4)">
-          <Inicio email={email} address={address} derechos={derechos} googleMaps={googleMaps} >
-            {children}
-          </Inicio>
-      </body>
+      <UserProvider>
+        <body className="min-h-screen grid grid-rows-[auto_1fr_auto] font-serif bg-(--color3) text-(--color4)">
+            <Inicio email={email} address={address} derechos={derechos} googleMaps={googleMaps} >
+              {children}
+            </Inicio>
+        </body>
+      </UserProvider>
     </html>
   );
 }
