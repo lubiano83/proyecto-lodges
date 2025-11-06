@@ -1,10 +1,6 @@
 import Link from "next/link";
 
-type Props = {
-    email: string
-};
-
-export default function Contact({ email }: Props ) {
+export default function Contact({ email }: { email: string } ) {
     return (
         <div className="flex justify-center item-center gap-1 text-center flex-wrap">
             <strong>Contacto:</strong> 

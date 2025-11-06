@@ -1,13 +1,9 @@
 import Link from "next/link";
 import SvgImage from "../navbar/SvgImage";
 
-type Props = {
-    handleShow: () => void
-};
-
-export default function Menu( { handleShow }: Props ) {
+export default function Menu( { handleShow }: { handleShow: () => void } ) {
     return (
-        <aside className="fixed left-0 top-0 w-64 h-full bg-medium flex flex-col justify-center items-center font-bold z-3 bg-(--color1) text-(--color3)">
+        <aside className="fixed left-0 top-0 w-64 h-full bg-medium flex flex-col justify-center items-center z-3 bg-(--color1) text-(--color3) text-lg">
             <div className="h-full w-full">
                 <div className="w-full flex justify-end items-start p-8" onClick={handleShow}>
                     <SvgImage src={"/cross-svgrepo-com-white.svg"} fnc={handleShow} size={30} />

@@ -1,12 +1,12 @@
-import { randomUUID } from "crypto";
 import { Role } from "../enum/role.enum";
 import { Entity, PrimaryColumn, Column } from "typeorm";
 
 @Entity({ name: "USERS" })
 export default class UserEntity {
   
-    @PrimaryColumn({ type: "varchar", length: 100 })
-    id: string;
+
+    @PrimaryColumn({ type: "varchar", length: 100, unique: true })
+    email!: string;
 
     @Column({ type: "varchar", length: 20 })
     name: string;
@@ -16,9 +16,6 @@ export default class UserEntity {
 
     @Column({ type: "varchar", length: 12 })
     phone: string;
-
-   @Column({ type: "varchar", length: 100, unique: true })
-    email!: string;
 
     @Column({ type: "varchar", length: 72 })
     password!: string;
@@ -45,7 +42,6 @@ export default class UserEntity {
         email: string,
         password: string
     ) {
-        this.id = randomUUID();
         this.name = name;
         this.lastname = lastname;
         this.phone = phone;

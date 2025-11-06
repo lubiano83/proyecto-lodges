@@ -4,16 +4,9 @@ import Navbar from "./navbar/Navbar";
 import useDarkMode from "../hooks/useDarkMode";
 import useShow from "../hooks/useShow";
 import Menu from "./menu/Menu";
+import { ReactNode } from "react";
 
-type Props = {
-    children: any,
-    email: string,
-    address: string,
-    derechos: string,
-    googleMaps: string
-};
-
-export default function Inicio( { children, email, address, derechos, googleMaps }: Props ) {
+export default function Inicio({ children, email, address, derechos, googleMaps }: { children: ReactNode, email: string, address: string, derechos: string, googleMaps: string}) {
 
     const { isDarkMode, toggleDarkMode } = useDarkMode();
     const { show, handleShow } = useShow();

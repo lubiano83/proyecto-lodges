@@ -1,6 +1,5 @@
 CREATE TABLE `USERS` (
-  `id` varchar(100) PRIMARY KEY,
-  `email` varchar(100) UNIQUE NOT NULL,
+  `email` varchar(100) PRIMARY KEY,
   `name` varchar(30) NOT NULL,
   `lastname` varchar(30) NOT NULL,
   `phone` varchar(12) NOT NULL,

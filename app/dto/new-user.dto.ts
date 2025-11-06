@@ -1,9 +1,9 @@
 export default class NewUserDto {
 
+    email: string;
     name: string;
     lastname: string;
     phone: string;
-    email: string;
     password: string;
 
 };

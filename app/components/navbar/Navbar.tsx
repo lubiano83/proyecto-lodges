@@ -3,13 +3,7 @@ import Link from "next/link";
 import Logo from "../Logo";
 import SvgImage from "./SvgImage";
 
-type Props = {
-    toggleDarkMode: () => void,
-    handleShow: () => void,
-    isDarkMode: boolean
-};
-
-export default function Navbar( { toggleDarkMode, handleShow, isDarkMode }: Props ) {
+export default function Navbar( { toggleDarkMode, handleShow, isDarkMode }: { toggleDarkMode: () => void, handleShow: () => void, isDarkMode: boolean } ) {
 
     return (
         <header className='bg-(--color1) text-(--color3) w-full p-4 flex justify-around items-center gap-4'>
