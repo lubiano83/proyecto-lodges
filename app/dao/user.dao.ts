@@ -3,31 +3,34 @@ import NewUserDto from "../dto/new-user.dto";
 import { randomUUID } from "crypto";
 import { Role } from "../enum/role.enum";
 import UserEntity from "../entity/user.entity";
+import UserDto from "../dto/user.dto";
 
 const dataSource = await getDataSource();
 const userRepository = dataSource.getRepository(UserEntity);
 
 export default class UserDao {
 
-    getUsers = async() => {
+    getUsers = async(): Promise<UserDto[]> => {
         try {
-            return userRepository.find();
+            const users = await userRepository.find();
+            const cleanUsers: UserDto[] = users.map(({ id, password, role, login_attempts, is_active, created_at, ...rest }) => rest);
+            return cleanUsers;
         } catch (error) {
             console.error("💥 Error en addUser (MySQL):", error);
             throw error;
         }
     };
 
-    getUserById = async(id: string) => {
+    getUserByEmail = async(email: string) => {
         try {
-            return userRepository.findOne({ where: { id } });
+            return userRepository.findOne({ where: { email } });
         } catch (error) {
             console.error("💥 Error en addUser (MySQL):", error);
             throw error;
         }
     };
 
-    addUser = async( newUserDto: NewUserDto ) => {
+    addUser = async( newUserDto: NewUserDto ): Promise<UserDto> => {
         try {
             const user = userRepository.create({
                 id: randomUUID(),
@@ -43,17 +46,18 @@ export default class UserDao {
                 updated_at: new Date()
             });
             await userRepository.save(user);
-            return user;
+            const cleanUser: UserDto = { name: user.name, lastname: user.lastname, phone: user.phone, email: user.email, updated_at: user.updated_at };
+            return cleanUser;
         } catch (error) {
             console.error("💥 Error en addUser (TypeORM):", error);
             throw error;
         }
     };
 
-    deleteUserById = async(id: string) => {
+    deleteUserByEmail = async(email: string) => {
         try {
-            const user = userRepository.findOne({ where: { id } });
-            userRepository.delete(id);
+            const user = userRepository.findOne({ where: { email } });
+            userRepository.delete(email);
             return user;
         } catch (error) {
             console.error("💥 Error en addUser (MySQL):", error);

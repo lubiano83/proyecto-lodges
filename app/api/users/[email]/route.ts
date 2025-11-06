@@ -3,10 +3,10 @@ import UserDao from "@/app/dao/user.dao";
 
 const userDao = new UserDao();
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: { email: string } }) {
   try {
-    const { id } = await params;
-    const user = await userDao.getUserById(id);
+    const { email } = await params;
+    const user = await userDao.getUserByEmail(email);
     return NextResponse.json({ payload: user }, { status: 200 });
   } catch (error) {
     if(error instanceof Error) throw new Error(error.message);
@@ -14,10 +14,10 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
   }
 }
 
-export async function DELETE(req: Request, { params }: { params: { id: string } }) {
+export async function DELETE(req: Request, { params }: { params: { email: string } }) {
   try {
-    const { id } = await params;
-    const user = await userDao.deleteUserById(id);
+    const { email } = await params;
+    const user = await userDao.deleteUserByEmail(email);
     return NextResponse.json({ payload: user }, { status: 200 });
   } catch (error) {
     if(error instanceof Error) throw new Error(error.message);
