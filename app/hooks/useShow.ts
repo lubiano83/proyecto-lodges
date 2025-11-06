@@ -8,6 +8,7 @@ export default function useShow() {
         };
         return { show, handleShow };
     } catch (error) {
-        throw new Error("Hubo un error al mostrar el componente..");
+        if (error instanceof Error) throw new Error(error.message);
+        throw new Error("Hubo un error en el backend..");
     }
 };

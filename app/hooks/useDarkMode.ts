@@ -16,6 +16,7 @@ const useDarkMode = () => {
             }
         } catch (error) {
             if (error instanceof Error) throw new Error(error.message);
+            throw new Error("Hubo un error en el backend..");
         }
     }, []);
 
@@ -34,6 +35,7 @@ const useDarkMode = () => {
             });
         } catch (error) {
             if (error instanceof Error) throw new Error(error.message);
+            throw new Error("Hubo un error en el backend..");
         }
     };
 

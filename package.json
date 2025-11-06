@@ -8,10 +8,14 @@
     "start": "next start"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "flowbite-react": "^0.12.10",
+    "mysql2": "^3.15.3",
     "next": "16.0.1",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.27"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

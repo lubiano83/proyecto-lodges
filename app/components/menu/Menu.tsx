@@ -1,3 +1,4 @@
+import Link from "next/link";
 import SvgImage from "../navbar/SvgImage";
 
 type Props = {
@@ -12,11 +13,19 @@ export default function Menu( { handleShow }: Props ) {
                     <SvgImage src={"/cross-svgrepo-com-white.svg"} fnc={handleShow} size={30} />
                 </div>
                 <div className="h-full flex flex-col justify-around items-center pb-40">
-                    <h3>Admin</h3>
-                    <h3>Login</h3>
+                    <Link href={"/pages/admin"}>
+                        <h3>Admin</h3>
+                    </Link>
+                    <Link href={"/pages/auth/login"}>
+                        <h3>Login</h3>
+                    </Link>
+                    <Link href={"/pages/auth/register"}>
                     <h3>Register</h3>
-                    <h3>Lodges</h3>
-                    <h3>Logout</h3>
+                    </Link>
+                    <Link href={"/pages/lodges"}>
+                        <h3>Lodges</h3>
+                    </Link>
+                    <h3 onClick={() => alert("logout")}>Logout</h3>
                 </div>
             </div>
         </aside>
