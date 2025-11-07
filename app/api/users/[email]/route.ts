@@ -9,8 +9,7 @@ export async function GET(req: Request, { params }: { params: { email: string } 
   try {
     const { email } = await params;
     const user = await userService.getUserByEmail(email);
-    const userActive = user?.is_active === true ? user : {};
-    return NextResponse.json({ payload: userActive }, { status: 200 });
+    return NextResponse.json({ payload: user }, { status: 200 });
   } catch (error) {
     if(error instanceof Error) throw new Error(error.message);
     throw new Error("Hubo un error en el backend..");

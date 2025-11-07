@@ -13,7 +13,7 @@ export default class UserService {
     getUsers = async(): Promise<UserDto[]> => {
         try {
             const users = await userDao.getUsers();
-            const usersInfo: UserDto[] = users.map((user) => ({
+            const userDto: UserDto[] = users.map((user) => ({
                 email: user.email,
                 name: user.name,
                 lastname: user.lastname,
@@ -23,29 +23,31 @@ export default class UserService {
                 address: user.address,
                 updated_at: user.updated_at
             }));
-            return usersInfo;
+            return userDto;
         } catch (error) {
             if (error instanceof Error) throw new Error(error.message);
             throw new Error("Hubo un error en el backend..");
         }
     };
 
-    getUserByEmail = async(email: string) => {
+    getUserByEmail = async(email: string): Promise<UserDto | string> => {
         try {
-            const user = userDao.getUserByEmail(email);
+            const user = await userDao.getUserByEmail(email);
             if(!user) throw new Error("Usuario no encontrado..");
-            return user;
+            if(user.is_active === false) return "Debes iniciar sesion..";
+            const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            return userDto;
         } catch (error) {
             if (error instanceof Error) throw new Error(error.message);
             throw new Error("Hubo un error en el backend..");
         }
     };
 
-    addUser = async( newUserDto: NewUserDto ) => {
+    addUser = async( newUserDto: NewUserDto ): Promise<UserDto> => {
         try {
             const users = await userDao.getUsers();
             const userFounded = users.find(user => user.email === newUserDto.email);
-            if(userFounded) throw new Error("Ese mail ya esta registrado..");
+            if(userFounded) throw new Error("Ese email ya esta registrado..");
             const newUser = await userDao.createUser({
                 email: newUserDto.email,
                 name: newUserDto.name,
@@ -62,14 +64,15 @@ export default class UserService {
                 updated_at: new Date()
             });
             await userDao.saveUser(newUser);
-            return newUser;
+            const userDto: UserDto = { email: newUserDto.email, name: newUserDto.name, lastname: newUserDto.lastname, phone: newUserDto.phone, country: newUserDto.country, state: newUserDto.state, address: newUserDto.address, updated_at: new Date() };
+            return userDto;
         } catch (error) {
             if (error instanceof Error) throw new Error(error.message);
             throw new Error("Hubo un error en el backend..");
         }
     };
 
-    updateUserByEmail = async(email: string, updateUserDto: UpdateUserDto) => {
+    updateUserByEmail = async(email: string, updateUserDto: UpdateUserDto): Promise<UserDto> => {
         try {
             let user = await userDao.getUserByEmail(email);
             if (!user) throw new Error("Usuaio no encontrado..");
@@ -91,61 +94,68 @@ export default class UserService {
             if(user?.address !== undefined) {
                 user.address = updateUserDto.address ?? user.address;
             };
-            const updatedUser = await userDao.saveUser(user);
-            return updatedUser;
+            user.updated_at = new Date();
+            await userDao.saveUser(user);
+            const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            return userDto;
         } catch (error) {
             if (error instanceof Error) throw new Error(error.message);
             throw new Error("Hubo un error en el backend..");
         }
     };
 
-    deleteUserByEmail = async(email: string) => {
+    deleteUserByEmail = async(email: string): Promise<UserDto> => {
         try {
             const user = await userDao.getUserByEmail(email);
+            if (!user) throw new Error("Usuaio no encontrado..");
             userDao.deleteUser(email);
-            return user;
+            const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            return userDto;
         } catch (error) {
             if (error instanceof Error) throw new Error(error.message);
             throw new Error("Hubo un error en el backend..");
         }
     };
 
-    changeRoleByEmail = async(email: string, changeRoleDto: ChangeRoleDto ) => {
+    changeRoleByEmail = async(email: string, changeRoleDto: ChangeRoleDto ): Promise<UserDto> => {
         try {
             let user = await userDao.getUserByEmail(email);
             if (!user) throw new Error("Usuaio no encontrado..");
             if(user.role !== undefined) {
                 user.role = changeRoleDto.role ?? user.role;
             }
-            const updatedUser = await userDao.saveUser(user);
-            return updatedUser;
+            await userDao.saveUser(user);
+            const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            return userDto;
         } catch (error) {
             if (error instanceof Error) throw new Error(error.message);
             throw new Error("Hubo un error en el backend..");
         }
     };
 
-    loginUser = async(loginUserDto: LoginUserDto) => {
+    loginUser = async(loginUserDto: LoginUserDto): Promise<UserDto> => {
         try {
             let user = await userDao.getUserByEmail(loginUserDto.email);
             if (!user) throw new Error("Usuaio no encontrado..");
             if(user.password !== loginUserDto.password) throw new Error("Contraseña invalida..");
             user.is_active = true;
-            const updatedUser = await userDao.saveUser(user);
-            return updatedUser;
+            await userDao.saveUser(user);
+            const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            return userDto;
         } catch (error) {
             if (error instanceof Error) throw new Error(error.message);
             throw new Error("Hubo un error en el backend..");
         }
     };
 
-    logoutUser = async(email: string) => {
+    logoutUser = async(email: string): Promise<UserDto> => {
         try {
             let user = await userDao.getUserByEmail(email);
             if (!user) throw new Error("Usuaio no encontrado..");
             user.is_active = false;
-            const updatedUser = await userDao.saveUser(user);
-            return updatedUser;
+            await userDao.saveUser(user);
+            const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            return userDto;
         } catch (error) {
             if (error instanceof Error) throw new Error(error.message);
             throw new Error("Hubo un error en el backend..");
