@@ -10,7 +10,7 @@ export default class UserDao {
         try {
             return await userRepository.find();
         } catch (error) {
-            throw new Error("Problema con la DB..");
+            throw new Error("Hubo un problema con la DB..");
         }
     };
 
@@ -18,7 +18,7 @@ export default class UserDao {
         try {
             return await userRepository.findOne({ where: { email } });
         } catch (error) {
-            throw new Error("Problema con la DB..");
+            throw new Error("Hubo un problema con la DB..");
         }
     }
 
@@ -26,7 +26,7 @@ export default class UserDao {
         try {
             return userRepository.create(data);
         } catch (error) {
-            throw new Error("Problema con la DB..");
+            throw new Error("Hubo un problema con la DB..");
         }
     };
 
@@ -34,7 +34,7 @@ export default class UserDao {
         try {
             return userRepository.save(user);
         } catch (error) {
-            throw new Error("Problema con la DB..");
+            throw new Error("Hubo un problema con la DB..");
         }
     };
 
@@ -42,7 +42,7 @@ export default class UserDao {
         try {
             return userRepository.delete({ email });
         } catch (error) {
-            throw new Error("Problema con la DB..");
+            throw new Error("Hubo un problema con la DB..");
         }
     };
 };

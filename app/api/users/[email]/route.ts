@@ -32,7 +32,7 @@ export async function PUT(req: Request, { params }: { params: { email: string } 
   try {
     const { email } = await params;
     const body = await req.json();
-    const updateUserDto: UpdateUserDto = { name: body.name, lastname: body.lastname, phone: body.phone };
+    const updateUserDto: UpdateUserDto = { name: body.name, lastname: body.lastname, phone: body.phone, country: body.country, state: body.state, address: body.address };
     const user = await userService.updateUserByEmail(email, updateUserDto);
     return NextResponse.json({ payload: user }, { status: 200 });
   } catch (error) {

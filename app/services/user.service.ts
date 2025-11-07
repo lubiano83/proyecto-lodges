@@ -4,14 +4,26 @@ import UpdateUserDto from "../dto/update-user.dto";
 import ChangeRoleDto from "../dto/change-role.dto";
 import LoginUserDto from "../dto/login-user.dto";
 import UserDao from "../dao/user.dao";
+import UserDto from "../dto/user.dto";
 
 const userDao = new UserDao();
 
 export default class UserService {
 
-    getUsers = async() => {
+    getUsers = async(): Promise<UserDto[]> => {
         try {
-            return await userDao.getUsers();
+            const users = await userDao.getUsers();
+            const usersInfo: UserDto[] = users.map((user) => ({
+                email: user.email,
+                name: user.name,
+                lastname: user.lastname,
+                phone: user.phone,
+                country: user.country,
+                state: user.state,
+                address: user.address,
+                updated_at: user.updated_at
+            }));
+            return usersInfo;
         } catch (error) {
             if (error instanceof Error) throw new Error(error.message);
             throw new Error("Hubo un error en el backend..");
@@ -20,7 +32,7 @@ export default class UserService {
 
     getUserByEmail = async(email: string) => {
         try {
-            const user = (userDao.getUserByEmail(email));
+            const user = userDao.getUserByEmail(email);
             if(!user) throw new Error("Usuario no encontrado..");
             return user;
         } catch (error) {
@@ -39,6 +51,9 @@ export default class UserService {
                 name: newUserDto.name,
                 lastname: newUserDto.lastname,
                 phone: newUserDto.phone,
+                country: newUserDto.country,
+                state: newUserDto.state,
+                address: newUserDto.address,
                 password: newUserDto.password,
                 role: Role.user,
                 is_active: false,
@@ -66,6 +81,15 @@ export default class UserService {
             };
             if(user?.phone !== undefined) {
                 user.phone = updateUserDto.phone ?? user.phone;
+            };
+            if(user?.country !== undefined) {
+                user.country = updateUserDto.country ?? user.country;
+            };
+            if(user?.state !== undefined) {
+                user.state = updateUserDto.state ?? user.state;
+            };
+            if(user?.address !== undefined) {
+                user.address = updateUserDto.address ?? user.address;
             };
             const updatedUser = await userDao.saveUser(user);
             return updatedUser;

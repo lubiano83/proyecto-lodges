@@ -17,7 +17,7 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const newUserDto: NewUserDto = { email: body.email, name: body.name, lastname: body.lastname, phone: body.phone, password: body.password };
+    const newUserDto: NewUserDto = { email: body.email, name: body.name, lastname: body.lastname, phone: body.phone, country: body.country, state: body.state, address: body.address, password: body.password };
     const user = await userService.addUser(newUserDto);
     return NextResponse.json({ payload: user }, { status: 201 });
   } catch (error) {

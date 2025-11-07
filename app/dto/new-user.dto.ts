@@ -4,6 +4,9 @@ export default class NewUserDto {
     name: string;
     lastname: string;
     phone: string;
+    country: string;
+    state: string;
+    address: string;
     password: string;
 
 };
