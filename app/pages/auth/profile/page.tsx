@@ -1,7 +1,11 @@
-export default function Profile() {
+import Profile from "@/app/components/profile/Profile";
+import Title from "@/app/components/Title";
+
+export default function ProfilePage() {
     return (
-        <>
-            Profile
-        </>
+        <div className="w-full h-full flex flex-col justify-center items-center gap-6">
+            <Title>Profile:</Title>
+            <Profile/>
+        </div>
     )
 }
