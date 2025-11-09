@@ -1,9 +1,9 @@
 "use client";
-import useUser from "@/app/hooks/useUser";
+import useAuth from "@/app/hooks/useAuth";
 
 export default function AdminPage() {
     
-  const { quantityRegistered, quantityLogged } = useUser();
+  const { quantityRegistered, quantityLogged } = useAuth();
 
   return (
     <div className="flex flex-col justify-center items-center">

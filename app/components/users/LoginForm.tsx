@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
 import Boton from "../Boton";
-import useUser from "@/app/hooks/useUser";
+import useAuth from "@/app/hooks/useAuth";
 import Title from "../Title";
 
 export default function LoginForm() {
 
-  const { loginUser, email, setEmail, password, setPassword } = useUser();
+  const { loginUser, email, setEmail, password, setPassword } = useAuth();
 
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>): Promise<void> => {
       e.preventDefault();

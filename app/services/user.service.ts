@@ -5,12 +5,13 @@ import ChangeRoleDto from "../dto/change-role.dto";
 import LoginUserDto from "../dto/login-user.dto";
 import UserDao from "../dao/user.dao";
 import UserDto from "../dto/user.dto";
+import { NextResponse } from "next/server";
 
 const userDao = new UserDao();
 
 export default class UserService {
 
-    getUsers = async(): Promise<UserDto[]> => {
+    getUsers = async(): Promise<UserDto[] | NextResponse> => {
         try {
             const users = await userDao.getUsers();
             const userDto: UserDto[] = users.map((user) => ({
@@ -23,31 +24,29 @@ export default class UserService {
                 address: user.address,
                 updated_at: user.updated_at
             }));
-            return userDto;
+            return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
-            if (error instanceof Error) throw new Error(error.message);
-            throw new Error("Hubo un error en el backend..");
+            return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
         }
     };
 
-    getUserByEmail = async(email: string): Promise<UserDto | string> => {
+    getUserByEmail = async(email: string): Promise<UserDto | NextResponse> => {
         try {
             const user = await userDao.getUserByEmail(email);
-            if(!user) throw new Error("Usuario no encontrado..");
-            if(user.is_active === false) return "Debes iniciar sesion..";
+            if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
+            if(user.is_active === false) return NextResponse.json({ message: "Primero debes iniciar sesion.." }, { status: 401 });
             const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
-            return userDto;
+            return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
-            if (error instanceof Error) throw new Error(error.message);
-            throw new Error("Hubo un error en el backend..");
+            return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
         }
     };
 
-    addUser = async( newUserDto: NewUserDto ): Promise<UserDto> => {
+    addUser = async( newUserDto: NewUserDto ): Promise<UserDto | NextResponse> => {
         try {
             const users = await userDao.getUsers();
             const userFounded = users.find(user => user.email === newUserDto.email);
-            if(userFounded) throw new Error("Ese email ya esta registrado..");
+            if(userFounded) return NextResponse.json({ message: "Ese email ya esta registrado.." }, { status: 400 });
             const newUser = await userDao.createUser({
                 email: newUserDto.email,
                 name: newUserDto.name,
@@ -65,17 +64,16 @@ export default class UserService {
             });
             await userDao.saveUser(newUser);
             const userDto: UserDto = { email: newUserDto.email, name: newUserDto.name, lastname: newUserDto.lastname, phone: newUserDto.phone, country: newUserDto.country, state: newUserDto.state, address: newUserDto.address, updated_at: new Date() };
-            return userDto;
+            return NextResponse.json({ payload: userDto }, { status: 201 });
         } catch (error) {
-            if (error instanceof Error) throw new Error(error.message);
-            throw new Error("Hubo un error en el backend..");
+            return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
         }
     };
 
-    updateUserByEmail = async(email: string, updateUserDto: UpdateUserDto): Promise<UserDto> => {
+    updateUserByEmail = async(email: string, updateUserDto: UpdateUserDto): Promise<UserDto | NextResponse> => {
         try {
             let user = await userDao.getUserByEmail(email);
-            if (!user) throw new Error("Usuaio no encontrado..");
+            if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
             if(user?.name !== undefined) {
                 user.name = updateUserDto.name ?? user.name;
             };
@@ -97,68 +95,63 @@ export default class UserService {
             user.updated_at = new Date();
             await userDao.saveUser(user);
             const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
-            return userDto;
+            return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
-            if (error instanceof Error) throw new Error(error.message);
-            throw new Error("Hubo un error en el backend..");
+            return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
         }
     };
 
-    deleteUserByEmail = async(email: string): Promise<UserDto> => {
+    deleteUserByEmail = async(email: string): Promise<UserDto | NextResponse> => {
         try {
             const user = await userDao.getUserByEmail(email);
-            if (!user) throw new Error("Usuaio no encontrado..");
+            if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
             userDao.deleteUser(email);
             const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
-            return userDto;
+            return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
-            if (error instanceof Error) throw new Error(error.message);
-            throw new Error("Hubo un error en el backend..");
+            return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
         }
     };
 
-    changeRoleByEmail = async(email: string, changeRoleDto: ChangeRoleDto ): Promise<UserDto> => {
+    changeRoleByEmail = async(email: string, changeRoleDto: ChangeRoleDto ): Promise<UserDto | NextResponse> => {
         try {
             let user = await userDao.getUserByEmail(email);
-            if (!user) throw new Error("Usuaio no encontrado..");
+            if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
             if(user.role !== undefined) {
                 user.role = changeRoleDto.role ?? user.role;
             }
             await userDao.saveUser(user);
             const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
-            return userDto;
+            return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
-            if (error instanceof Error) throw new Error(error.message);
-            throw new Error("Hubo un error en el backend..");
+            return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
         }
     };
 
-    loginUser = async(loginUserDto: LoginUserDto): Promise<UserDto> => {
+    loginUser = async(loginUserDto: LoginUserDto): Promise<UserDto | NextResponse> => {
         try {
+            if(!loginUserDto.email || !loginUserDto.password) return NextResponse.json({ message: "Todos los campos son requeridos.." }, { status: 400 });
             let user = await userDao.getUserByEmail(loginUserDto.email);
-            if (!user) throw new Error("Usuaio no encontrado..");
-            if(user.password !== loginUserDto.password) throw new Error("Contraseña invalida..");
+            if (!user || user.password !== loginUserDto.password) return NextResponse.json({ message: "Credenciales invalidas.."}, { status: 401 });
             user.is_active = true;
             await userDao.saveUser(user);
             const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
-            return userDto;
+            return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
-            if (error instanceof Error) throw new Error(error.message);
-            throw new Error("Hubo un error en el backend..");
+            return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
         }
     };
 
-    logoutUser = async(email: string): Promise<UserDto> => {
+    logoutUser = async(email: string): Promise<UserDto | NextResponse> => {
         try {
             let user = await userDao.getUserByEmail(email);
-            if (!user) throw new Error("Usuaio no encontrado..");
+            if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
             user.is_active = false;
             await userDao.saveUser(user);
             const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
-            return userDto;
+            return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
-            if (error instanceof Error) throw new Error(error.message);
-            throw new Error("Hubo un error en el backend..");
+            return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
         }
     };
 

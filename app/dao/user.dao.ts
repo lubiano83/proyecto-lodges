@@ -7,42 +7,22 @@ const userRepository = dataSource.getRepository(UserEntity);
 export default class UserDao {
 
     getUsers = async() => {
-        try {
-            return await userRepository.find();
-        } catch (error) {
-            throw new Error("Hubo un problema con la DB..");
-        }
+        return await userRepository.find();
     };
 
     getUserByEmail = async(email: string) => {
-        try {
-            return await userRepository.findOne({ where: { email } });
-        } catch (error) {
-            throw new Error("Hubo un problema con la DB..");
-        }
+        return await userRepository.findOne({ where: { email } });
     }
 
     createUser = async(data: any) => {
-        try {
-            return userRepository.create(data);
-        } catch (error) {
-            throw new Error("Hubo un problema con la DB..");
-        }
+        return userRepository.create(data);
     };
 
     saveUser = async(user: any) => {
-        try {
-            return userRepository.save(user);
-        } catch (error) {
-            throw new Error("Hubo un problema con la DB..");
-        }
+        return userRepository.save(user);
     };
 
     deleteUser = async(email: string) => {
-        try {
-            return userRepository.delete({ email });
-        } catch (error) {
-            throw new Error("Hubo un problema con la DB..");
-        }
+        return userRepository.delete({ email });
     };
 };

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import SvgImage from "../navbar/SvgImage";
-import useUser from "@/app/hooks/useUser";
+import useAuth from "@/app/hooks/useAuth";
 
 export default function Menu( { handleShow }: { handleShow: () => void} ) {
 
-    const { email, logoutUser, logged } = useUser();
+    const { logoutUser, logged, user } = useAuth();
 
     return (
         <aside className="fixed left-0 top-0 w-64 h-full bg-medium flex flex-col justify-center items-center z-3 bg-(--color1) text-(--color3) text-lg">
@@ -18,7 +18,7 @@ export default function Menu( { handleShow }: { handleShow: () => void} ) {
                     { logged === false ? <Link href={"/pages/auth/login"}><h3>Login</h3></Link> : "" }
                     { logged === false ? <Link href={"/pages/auth/register"}><h3>Register</h3></Link> : "" }
                     <Link href={"/pages/lodges"}><h3>Lodges</h3></Link>
-                    { logged ? <h3 onClick={() => logoutUser(email)}>Logout</h3> : "" }
+                    { logged ? <h3 onClick={() => logoutUser(user ? user?.email : "")}>Logout</h3> : "" }
                 </div>
             </div>
         </aside>
