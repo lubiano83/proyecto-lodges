@@ -1,12 +1,12 @@
 "use client";
-import SubTitle from "@/app/components/SubTitle";
 import useAuth from "@/app/hooks/useAuth";
+import GoToLogin from "../GoToLogin";
 
 export default function Admin() {
 
     const { quantityRegistered, quantityLogged, user } = useAuth();
 
-    if(!user) return <SubTitle>Primero debes iniciar sesion..</SubTitle>;
+    if(!user) return <GoToLogin />;
 
     return (
         <div className="w-full h-full flex flex-col justify-center items-center">

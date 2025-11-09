@@ -1,16 +1,16 @@
 "use client";
 import Link from "next/link";
 import Boton from "@/app/components/Boton";
-import SubTitle from "@/app/components/SubTitle";
 import useAuth from "@/app/hooks/useAuth";
 import Title from "@/app/components/Title";
 import Image from "next/image";
+import GoToLogin from "../../GoToLogin";
 
 export default function Profile() {
 
     const { user } = useAuth();
 
-    if(!user) return <SubTitle>Primero debes iniciar sesion..</SubTitle>;
+    if(!user) return <GoToLogin />;
 
     return (
         <div className="flex flex-col justify-center items-center gap-4">

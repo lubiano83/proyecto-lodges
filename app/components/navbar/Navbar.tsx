@@ -4,7 +4,7 @@ import Logo from "../Logo";
 import SvgImage from "./SvgImage";
 import UserInterface from "@/app/interface/user.interface";
 
-export default function Navbar( { toggleDarkMode, handleShow, isDarkMode, user }: { toggleDarkMode: () => void, handleShow: () => void, isDarkMode: boolean, user: UserInterface } ) {
+export default function Navbar( { toggleDarkMode, handleShow, isDarkMode, user }: { toggleDarkMode: () => void, handleShow: () => void, isDarkMode: boolean, user: UserInterface | null } ) {
 
     return (
         <header className='bg-(--color1) text-(--color3) w-full p-4 flex justify-around items-center gap-4'>
