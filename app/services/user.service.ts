@@ -6,6 +6,7 @@ import LoginUserDto from "../dto/login-user.dto";
 import UserDao from "../dao/user.dao";
 import UserDto from "../dto/user.dto";
 import { NextResponse } from "next/server";
+import ChangeImageDto from "../dto/change-Image.dto";
 
 const userDao = new UserDao();
 
@@ -15,6 +16,7 @@ export default class UserService {
         try {
             const users = await userDao.getUsers();
             const userDto: UserDto[] = users.map((user) => ({
+                image: user.image,
                 email: user.email,
                 name: user.name,
                 lastname: user.lastname,
@@ -53,7 +55,7 @@ export default class UserService {
             const user = await userDao.getUserByEmail(email);
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
             if(user.is_active === false) return NextResponse.json({ message: "Primero debes iniciar sesion.." }, { status: 401 });
-            const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
             return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
             return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
@@ -75,6 +77,7 @@ export default class UserService {
                 state: newUserDto.state,
                 address: newUserDto.address,
                 password: newUserDto.password,
+                image: "",
                 role: Role.user,
                 is_active: false,
                 login_attempts: 0,
@@ -82,7 +85,7 @@ export default class UserService {
                 updated_at: new Date()
             });
             await userDao.saveUser(newUser);
-            const userDto: UserDto = { email: newUserDto.email, name: newUserDto.name, lastname: newUserDto.lastname, phone: newUserDto.phone, country: newUserDto.country, state: newUserDto.state, address: newUserDto.address, updated_at: new Date() };
+            const userDto: UserDto = { image: "", email: newUserDto.email, name: newUserDto.name, lastname: newUserDto.lastname, phone: newUserDto.phone, country: newUserDto.country, state: newUserDto.state, address: newUserDto.address, updated_at: new Date() };
             return NextResponse.json({ payload: userDto }, { status: 201 });
         } catch (error) {
             return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
@@ -93,15 +96,15 @@ export default class UserService {
         try {
             let user = await userDao.getUserByEmail(email);
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
-            user.name = updateUserDto.name ?? user.name;
-            user.lastname = updateUserDto.lastname ?? user.lastname;
-            user.phone = updateUserDto.phone ?? user.phone;
-            user.country = updateUserDto.country ?? user.country;
-            user.state = updateUserDto.state ?? user.state;
-            user.address = updateUserDto.address ?? user.address;
+            user.name = updateUserDto.name ? updateUserDto.name :  user.name;
+            user.lastname = updateUserDto.lastname ? updateUserDto.lastname : user.lastname;
+            user.phone = updateUserDto.phone ? updateUserDto.phone : user.phone;
+            user.country = updateUserDto.country ? updateUserDto.country : user.country;
+            user.state = updateUserDto.state ? updateUserDto.state : user.state;
+            user.address = updateUserDto.address ? updateUserDto.address : user.address;
             user.updated_at = new Date();
             await userDao.saveUser(user);
-            const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
             return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
             return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
@@ -113,7 +116,7 @@ export default class UserService {
             const user = await userDao.getUserByEmail(email);
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
             userDao.deleteUser(email);
-            const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
             return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
             return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
@@ -124,11 +127,9 @@ export default class UserService {
         try {
             let user = await userDao.getUserByEmail(email);
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
-            if(user.role !== undefined) {
-                user.role = changeRoleDto.role ?? user.role;
-            }
+            user.role = changeRoleDto.role ?? user.role;
             await userDao.saveUser(user);
-            const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
             return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
             return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
@@ -142,7 +143,7 @@ export default class UserService {
             if (!user || user.password !== loginUserDto.password) return NextResponse.json({ message: "Credenciales invalidas.."}, { status: 401 });
             user.is_active = true;
             await userDao.saveUser(user);
-            const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
             return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
             return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
@@ -155,7 +156,20 @@ export default class UserService {
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
             user.is_active = false;
             await userDao.saveUser(user);
-            const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            return NextResponse.json({ payload: userDto }, { status: 200 });
+        } catch (error) {
+            return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
+        }
+    };
+
+    changeImage = async(email: string, changeImageDto: ChangeImageDto) => {
+        try {
+            let user = await userDao.getUserByEmail(email);
+            if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
+            user.image = changeImageDto.image ? changeImageDto.image : user.image;
+            await userDao.saveUser(user);
+            const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
             return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
             return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });

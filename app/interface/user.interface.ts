@@ -1,5 +1,6 @@
 export default interface UserInterface {
 
+  image: string;
   email: string;
   name: string;
   lastname: string;

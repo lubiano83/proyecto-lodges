@@ -1,5 +1,6 @@
 export default class UserDto {
 
+    image: string;
     email: string;
     name: string;
     lastname: string;

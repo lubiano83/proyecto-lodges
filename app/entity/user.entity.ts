@@ -29,6 +29,9 @@ export default class UserEntity {
     @Column({ type: "varchar", length: 72 })
     password: string;
 
+    @Column({ type: "varchar", length: 255 })
+    image: string;
+
     @Column({ type: "varchar", length: 30 })
     role: string;
 
@@ -62,6 +65,7 @@ export default class UserEntity {
         this.address = address;
         this.email = email;
         this.password = password;
+        this.image = "";
         this.role = Role.user;
         this.is_active = false;
         this.login_attempts = 0;
