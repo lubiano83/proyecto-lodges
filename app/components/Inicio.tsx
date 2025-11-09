@@ -16,7 +16,7 @@ export default function Inicio({ children, email, address, derechos, googleMaps 
     return (
         <>
             <Navbar toggleDarkMode={toggleDarkMode} handleShow={handleShow} isDarkMode={isDarkMode} user={user} />
-            <main className="h-full w-full flex flex-col justify-start items-center p-8 gap-8">
+            <main className="h-full w-full flex flex-col justify-start items-center p-8">
                 { show ? <Menu handleShow={handleShow} /> : ""}
                 {children}
             </main>

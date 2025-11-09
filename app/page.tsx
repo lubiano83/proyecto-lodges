@@ -7,16 +7,18 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <>
+    <div className="flex flex-col justify-center items-center gap-4">
       <div className="flex flex-col justify-between items-center gap-1">
           <Title>¡Bienvenidos a Anwa Lodge!</Title>
           <SubTitle>Donde la montaña se encuentra con la calma...</SubTitle>
       </div>
-      <FB_Carousel />
-      <Texto />
+      <div className="flex flex-col justify-center items-center gap-4 p-1">
+        <FB_Carousel />
+        <Texto />
+      </div>
       <Link href={"/pages/lodges"}>
         <Boton>Reservar</Boton>
       </Link>
-    </>
+    </div>
   );
 }

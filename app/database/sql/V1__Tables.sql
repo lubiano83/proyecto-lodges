@@ -7,7 +7,7 @@ CREATE TABLE `USERS` (
   `state` varchar(30) NOT NULL,
   `address` varchar(100) NOT NULL,
   `password` varchar(72) NOT NULL,
-  `image` VARCHAR(255) NULL,
+  `image` VARCHAR(255),
   `is_active` boolean NOT NULL,
   `role` varchar(30) NOT NULL,
   `login_attempts` int NOT NULL,
