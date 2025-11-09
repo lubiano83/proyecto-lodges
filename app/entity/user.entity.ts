@@ -1,5 +1,6 @@
 import { Role } from "../enum/role.enum";
 import { Entity, PrimaryColumn, Column } from "typeorm";
+import { createHash } from "@/app/utils/bcrypt.utils";
 
 @Entity({ name: "USERS" })
 export default class UserEntity {

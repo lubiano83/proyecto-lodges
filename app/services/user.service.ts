@@ -7,6 +7,7 @@ import UserDao from "../dao/user.dao";
 import UserDto from "../dto/user.dto";
 import { NextResponse } from "next/server";
 import ChangeImageDto from "../dto/change-Image.dto";
+import { isValidPassword, createHash } from "../utils/bcrypt.utils";
 
 const userDao = new UserDao();
 
@@ -76,7 +77,7 @@ export default class UserService {
                 country: newUserDto.country,
                 state: newUserDto.state,
                 address: newUserDto.address,
-                password: newUserDto.password,
+                password: await createHash(newUserDto.password),
                 image: "",
                 role: Role.user,
                 is_active: false,
@@ -140,7 +141,9 @@ export default class UserService {
         try {
             if(!loginUserDto.email || !loginUserDto.password) return NextResponse.json({ message: "Todos los campos son requeridos.." }, { status: 400 });
             let user = await userDao.getUserByEmail(loginUserDto.email);
-            if (!user || user.password !== loginUserDto.password) return NextResponse.json({ message: "Credenciales invalidas.."}, { status: 401 });
+            if (!user) return NextResponse.json({ message: "Credenciales invalidas.."}, { status: 401 });
+            const isValid = await isValidPassword(loginUserDto.password, user?.password);
+            if (!isValid) return NextResponse.json({ message: "Credenciales invalidas.."}, { status: 401 });
             user.is_active = true;
             await userDao.saveUser(user);
             const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
