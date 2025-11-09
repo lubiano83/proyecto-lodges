@@ -23,9 +23,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
 
   useEffect(() => {
+    checkSession();
     usersRegistered();
     usersLogged();
-    if(email) getUserByEmail(email);
   }, []);
 
   const usersRegistered = async () => {
@@ -164,6 +164,26 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } else {
         const error = await response.json();
         alert(error.message);
+        return;
+      }
+    } catch (error) {
+      throw new Error("Hubo un error en el context..");
+    }
+  };
+
+  const checkSession = async () => {
+    try {
+      const response = await fetch("/api/users/checkout", {
+        method: "GET",
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        await getUserByEmail(data.payload);
+        return data.payload;
+      } else {
+        const error = await response.json();
         return;
       }
     } catch (error) {

@@ -5,9 +5,10 @@ import ChangeRoleDto from "../dto/change-role.dto";
 import LoginUserDto from "../dto/login-user.dto";
 import UserDao from "../dao/user.dao";
 import UserDto from "../dto/user.dto";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import ChangeImageDto from "../dto/change-Image.dto";
 import { isValidPassword, createHash } from "../utils/bcrypt.utils";
+import jwt from "jsonwebtoken";
 
 const userDao = new UserDao();
 
@@ -147,7 +148,10 @@ export default class UserService {
             user.is_active = true;
             await userDao.saveUser(user);
             const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
-            return NextResponse.json({ payload: userDto }, { status: 200 });
+            const token = jwt.sign({ email: userDto.email, role: user.role }, process.env.COOKIE_KEY!, { expiresIn: "30m" });
+            const res = NextResponse.json({ payload: userDto }, { status: 200 });
+            res.cookies.set(process.env.COOKIE_NAME!, token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 60 * 30, path: "/" });
+            return res;
         } catch (error) {
             return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
         }
@@ -160,7 +164,9 @@ export default class UserService {
             user.is_active = false;
             await userDao.saveUser(user);
             const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
-            return NextResponse.json({ payload: userDto }, { status: 200 });
+            const res = NextResponse.json({ payload: userDto }, { status: 200 });
+            res.cookies.set(process.env.COOKIE_NAME!, "", { httpOnly: true, secure: true, sameSite: "strict", maxAge: 0, path: "/" });
+            return res;
         } catch (error) {
             return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
         }
@@ -176,6 +182,32 @@ export default class UserService {
             return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
             return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
+        }
+    };
+
+    private getEmailFromCookie(req: NextRequest): string | null {
+        try {
+            const token = req.cookies.get(process.env.COOKIE_NAME!)?.value;
+            if (!token) return null;
+            const decoded = jwt.verify( token, process.env.COOKIE_KEY!) as { email: string };
+            return decoded.email;
+        } catch (error) {
+            console.error("Error al obtener email desde cookie:", error);
+            return null;
+        }
+    }
+
+    checkoutUser = async (req: NextRequest) => {
+        try {
+            const email = this.getEmailFromCookie(req);
+            if (!email) return NextResponse.json({ message: "No hay sesión activa. Usuario inactivo." }, { status: 401 });
+            const user = await userDao.getUserByEmail(email);
+            if (!user) return NextResponse.json({ message: "Usuario no encontrado." }, { status: 404 });
+            user.is_active = true;
+            await userDao.saveUser(user);
+            return NextResponse.json({ payload: email }, { status: 200 });
+        } catch (error) {
+            return NextResponse.json({ message: "Hubo un problema en el backend.." },{ status: 500 });
         }
     };
 

@@ -13,4 +13,3 @@ export async function POST(req: Request) {
   const newUserDto: NewUserDto = { email: body.email, name: body.name, lastname: body.lastname, phone: body.phone, country: body.country, state: body.state, address: body.address, password: body.password };
   return await userService.addUser(newUserDto);
 }
-
