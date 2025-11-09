@@ -1,7 +1,8 @@
-import UserDao from "@/app/dao/user.dao";
+import UserService from "@/app/services/user.service";
 
-const userDao = new UserDao();
+const userService = new UserService();
 
 export async function GET() {
-    return (await userDao.getUsers()).length;
+    return await userService.usersRegistered();
+
 }

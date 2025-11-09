@@ -30,6 +30,24 @@ export default class UserService {
         }
     };
 
+    usersRegistered = async(): Promise<number | NextResponse | undefined> => {
+        try {
+            const users = (await userDao.getUsers()).length;
+            return NextResponse.json({ payload: users }, { status: 200 });
+        } catch (error) {
+            return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
+        }
+    };
+
+    usersLogged = async(): Promise<number | NextResponse | undefined> => {
+        try {
+            const users = (await userDao.getUsers()).filter(user => user.is_active === true).length;
+            return NextResponse.json({ payload: users }, { status: 200 });
+        } catch (error) {
+            return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
+        }
+    };
+
     getUserByEmail = async(email: string): Promise<UserDto | NextResponse> => {
         try {
             const user = await userDao.getUserByEmail(email);

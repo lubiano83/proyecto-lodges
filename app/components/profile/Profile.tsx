@@ -6,11 +6,12 @@ import useAuth from "@/app/hooks/useAuth";
 
 export default function Profile() {
 
-    const { user, logged } = useAuth();
+    const { user } = useAuth();
+    console.log(user)
 
     return (
         <div className="flex flex-col justify-center items-center gap-6">
-            { logged && user ? 
+            { user ? 
                 <>
                     <div className="flex flex-col justify-center items-start gap-2">
                         <h3><strong>Email:</strong> {user.email}</h3>

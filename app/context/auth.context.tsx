@@ -12,10 +12,22 @@ interface AuthContextType {
   password: string;
   setPassword: (password: string) => void;
   logoutUser: (email: string) => void;
-  logged: boolean;
   getUserByEmail: (email: string) => void;
   user: UserInterface | null;
-};
+  updateUserByEmail: (email: string) => void;
+  name: string;
+  setName: (name: string) => void;
+  lastname: string;
+  setLastname: (lastname: string) => void;
+  country: string;
+  setCountry: (country: string) => void;
+  state: string;
+  setState: (state: string) => void;
+  address: string;
+  setAddress: (address: string) => void;
+  phone: string;
+  setPhone: (phone: string) => void;
+}
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -25,8 +37,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [ quantityLogged, setQuantityLogged ] = useState<number>(0);
   const [ email, setEmail ] = useState<string>("");
   const [ password, setPassword ] = useState<string>("");
-  const [ logged, setLogged ] = useState<boolean>(false);
   const [ user, setUser ] = useState(null);
+  const [ name, setName ] = useState("");
+  const [ phone, setPhone ] = useState("");
+  const [ lastname, setLastname ] = useState("");
+  const [ country, setCountry ] = useState("");
+  const [ state, setState ] = useState("");
+  const [ address, setAddress ] = useState("");
 
   const router = useRouter();
 
@@ -71,7 +88,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const data = await response.json();
           await usersLogged();
           await getUserByEmail(email);
-          setLogged(true);
           setEmail("");
           setPassword("");
           router.push("/");
@@ -82,7 +98,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     } catch (error) {
-      alert("hola")
+      throw new Error("Hubo un error en el context..");
+    }
+  };
+
+    const updateUserByEmail = async(email: string) => {
+    try {
+      const response = await fetch(`/api/users/${email}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, lastname, phone, country, state, address })});
+      if (response.ok) {
+          const data = await response.json();
+          await getUserByEmail(email);
+          setName("");
+          setLastname("");
+          setCountry("");
+          setState("");
+          setAddress("");
+          setPhone("");
+          router.push("/pages/auth/profile");
+          return data.payload;
+      } else {
+        const error = await response.json();
+        alert(error.message);
+        return;
+      }
+    } catch (error) {
+      throw new Error("Hubo un error en el context..");
     }
   };
 
@@ -94,15 +137,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
       if (response.ok) {
         const data = await response.json();
-        await usersLogged();
-        await getUserByEmail(email); 
-        setLogged(false);
+        setUser(null);
         router.push("/");
         return data.payload;
       } else {
         const error = await response.json();
         alert(error.message);
-        return false;
+        return;
       }
     } catch (error) {
       throw new Error("Hubo un error en el context..");
@@ -111,18 +152,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const getUserByEmail = async(email: string) => {
     try {
+      if(!email) return;
       const response = await fetch(`/api/users/${email}`, {
         method: "GET",
       });
       const data = await response.json();
-      setUser(data.payload)
+      setUser(data.payload);
+      return;
     } catch (error) {
       throw new Error("Hubo un error en el context..");
     }
   };
 
   return (
-    <AuthContext.Provider value={{ quantityRegistered, quantityLogged, loginUser, email, setEmail, password, setPassword, logoutUser, logged, getUserByEmail, user }}>
+    <AuthContext.Provider value={{ quantityRegistered, quantityLogged, loginUser, email, setEmail, password, setPassword, logoutUser, getUserByEmail, user, updateUserByEmail, name, setName, lastname, setLastname, country, setCountry, state, setState, address, setAddress, phone, setPhone }}>
       {children}
     </AuthContext.Provider>
   );
