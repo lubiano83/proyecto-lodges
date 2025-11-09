@@ -2,34 +2,9 @@
 import { createContext, useState, ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import UserInterface from "../interface/user.interface";
+import AuthInterface from "../interface/auth.interface";
 
-interface AuthContextType {
-  quantityRegistered: number;
-  quantityLogged: number;
-  loginUser: () => void;
-  email: string;
-  setEmail: (email: string) => void;
-  password: string;
-  setPassword: (password: string) => void;
-  logoutUser: (email: string) => void;
-  getUserByEmail: (email: string) => void;
-  user: UserInterface | null;
-  updateUserByEmail: (email: string) => void;
-  name: string;
-  setName: (name: string) => void;
-  lastname: string;
-  setLastname: (lastname: string) => void;
-  country: string;
-  setCountry: (country: string) => void;
-  state: string;
-  setState: (state: string) => void;
-  address: string;
-  setAddress: (address: string) => void;
-  phone: string;
-  setPhone: (phone: string) => void;
-}
-
-export const AuthContext = createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthInterface | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
@@ -37,13 +12,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [ quantityLogged, setQuantityLogged ] = useState<number>(0);
   const [ email, setEmail ] = useState<string>("");
   const [ password, setPassword ] = useState<string>("");
-  const [ user, setUser ] = useState(null);
-  const [ name, setName ] = useState("");
-  const [ phone, setPhone ] = useState("");
-  const [ lastname, setLastname ] = useState("");
-  const [ country, setCountry ] = useState("");
-  const [ state, setState ] = useState("");
-  const [ address, setAddress ] = useState("");
+  const [ user, setUser ] = useState<UserInterface | null>(null);
+  const [ name, setName ] = useState<string>("");
+  const [ phone, setPhone ] = useState<string>("");
+  const [ lastname, setLastname ] = useState<string>("");
+  const [ country, setCountry ] = useState<string>("");
+  const [ state, setState ] = useState<string>("");
+  const [ address, setAddress ] = useState<string>("");
 
   const router = useRouter();
 
@@ -94,6 +69,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           return data.payload;
       } else {
         const error = await response.json();
+        setEmail("");
+        setPassword("");
         alert(error.message);
         return;
       }
@@ -164,8 +141,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const registerUser = async() => {
+    try {
+      const response = await fetch("/api/users", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, name, lastname, phone, country, state, address, password })});
+      if (response.ok) {
+          const data = await response.json();
+          await usersRegistered();
+          setEmail("");
+          setName("");
+          setLastname("");
+          setPhone("");
+          setCountry("");
+          setState("");
+          setAddress("");
+          setPassword("");
+          router.push("/pages/auth/login");
+          return data.payload;
+      } else {
+        const error = await response.json();
+        alert(error.message);
+        return;
+      }
+    } catch (error) {
+      throw new Error("Hubo un error en el context..");
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ quantityRegistered, quantityLogged, loginUser, email, setEmail, password, setPassword, logoutUser, getUserByEmail, user, updateUserByEmail, name, setName, lastname, setLastname, country, setCountry, state, setState, address, setAddress, phone, setPhone }}>
+    <AuthContext.Provider value={{ quantityRegistered, quantityLogged, loginUser, email, setEmail, password, setPassword, logoutUser, getUserByEmail, user, updateUserByEmail, name, setName, lastname, setLastname, country, setCountry, state, setState, address, setAddress, phone, setPhone, registerUser }}>
       {children}
     </AuthContext.Provider>
   );

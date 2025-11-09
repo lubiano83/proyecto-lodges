@@ -62,6 +62,7 @@ export default class UserService {
 
     addUser = async( newUserDto: NewUserDto ): Promise<UserDto | NextResponse> => {
         try {
+            if(!newUserDto.email || !newUserDto.name || !newUserDto.lastname || !newUserDto.phone || !newUserDto.country || !newUserDto.state || !newUserDto.address || !newUserDto.password) return NextResponse.json({ message: "Todos los campos son requeridos.." }, { status: 400 });
             const users = await userDao.getUsers();
             const userFounded = users.find(user => user.email === newUserDto.email);
             if(userFounded) return NextResponse.json({ message: "Ese email ya esta registrado.." }, { status: 400 });
@@ -92,24 +93,12 @@ export default class UserService {
         try {
             let user = await userDao.getUserByEmail(email);
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
-            if(user?.name !== undefined) {
-                user.name = updateUserDto.name ?? user.name;
-            };
-            if(user?.lastname !== undefined) {
-                user.lastname = updateUserDto.lastname ?? user.lastname;
-            };
-            if(user?.phone !== undefined) {
-                user.phone = updateUserDto.phone ?? user.phone;
-            };
-            if(user?.country !== undefined) {
-                user.country = updateUserDto.country ?? user.country;
-            };
-            if(user?.state !== undefined) {
-                user.state = updateUserDto.state ?? user.state;
-            };
-            if(user?.address !== undefined) {
-                user.address = updateUserDto.address ?? user.address;
-            };
+            user.name = updateUserDto.name ?? user.name;
+            user.lastname = updateUserDto.lastname ?? user.lastname;
+            user.phone = updateUserDto.phone ?? user.phone;
+            user.country = updateUserDto.country ?? user.country;
+            user.state = updateUserDto.state ?? user.state;
+            user.address = updateUserDto.address ?? user.address;
             user.updated_at = new Date();
             await userDao.saveUser(user);
             const userDto: UserDto = { email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };

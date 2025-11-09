@@ -24,6 +24,9 @@ export default function LoginForm() {
           </Link>
           <Boton>Ingresar</Boton>
         </div>
+        <Link href={"/"}>
+          <h5 className="text-sm text-(--color3)">Recuperar contraseña..</h5>
+        </Link>
     </form>
   );
 }

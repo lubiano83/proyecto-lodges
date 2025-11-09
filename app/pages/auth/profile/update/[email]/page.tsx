@@ -1,5 +1,5 @@
 "use client";
-import UpdateProfile from "@/app/components/profile/UpdateProfile";
+import UpdateProfile from "@/app/components/users/profile/UpdateProfile";
 import { useParams } from "next/navigation"
 
 export default function UpdatePage() {
