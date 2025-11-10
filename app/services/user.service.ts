@@ -9,6 +9,7 @@ import { NextRequest, NextResponse } from "next/server";
 import ChangeImageDto from "../dto/change-Image.dto";
 import { isValidPassword, createHash } from "../utils/bcrypt.utils";
 import jwt from "jsonwebtoken";
+import JwtInterface from "../interface/jwt.interface";
 
 const userDao = new UserDao();
 
@@ -185,27 +186,28 @@ export default class UserService {
         }
     };
 
-    private getEmailFromCookie(req: NextRequest): string | null {
+    private getInfoFromCookie(req: NextRequest): JwtInterface | null {
         try {
             const token = req.cookies.get(process.env.COOKIE_NAME!)?.value;
             if (!token) return null;
-            const decoded = jwt.verify( token, process.env.COOKIE_KEY!) as { email: string };
-            return decoded.email;
+            const decoded = jwt.verify(token, process.env.COOKIE_KEY!) as JwtInterface;
+            return decoded;
         } catch (error) {
-            console.error("Error al obtener email desde cookie:", error);
+            console.error("Error al obtener datos desde cookie:", error);
             return null;
         }
     }
 
     checkoutUser = async (req: NextRequest) => {
         try {
-            const email = this.getEmailFromCookie(req);
-            if (!email) return NextResponse.json({ message: "No hay sesión activa. Usuario inactivo." }, { status: 401 });
-            const user = await userDao.getUserByEmail(email);
+            const info = this.getInfoFromCookie(req);
+            if(!info) return;
+            if (!info.email) return NextResponse.json({ message: "No hay sesión activa. Usuario inactivo." }, { status: 401 });
+            const user = await userDao.getUserByEmail(info.email);
             if (!user) return NextResponse.json({ message: "Usuario no encontrado." }, { status: 404 });
             user.is_active = true;
             await userDao.saveUser(user);
-            return NextResponse.json({ payload: email }, { status: 200 });
+            return NextResponse.json( info, { status: 200 });
         } catch (error) {
             return NextResponse.json({ message: "Hubo un problema en el backend.." },{ status: 500 });
         }

@@ -19,6 +19,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [ country, setCountry ] = useState<string>("");
   const [ state, setState ] = useState<string>("");
   const [ address, setAddress ] = useState<string>("");
+  const [ role, setRole ] = useState<string>("user");
 
   const router = useRouter();
 
@@ -180,10 +181,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
       if (response.ok) {
         const data = await response.json();
-        await getUserByEmail(data.payload);
+        await getUserByEmail(data.email);
+        setRole(data.role);
         return data.payload;
       } else {
-        const error = await response.json();
         return;
       }
     } catch (error) {
@@ -192,7 +193,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ quantityRegistered, quantityLogged, loginUser, email, setEmail, password, setPassword, logoutUser, getUserByEmail, user, updateUserByEmail, name, setName, lastname, setLastname, country, setCountry, state, setState, address, setAddress, phone, setPhone, registerUser }}>
+    <AuthContext.Provider value={{ quantityRegistered, quantityLogged, loginUser, email, setEmail, password, setPassword, logoutUser, getUserByEmail, user, updateUserByEmail, name, setName, lastname, setLastname, country, setCountry, state, setState, address, setAddress, phone, setPhone, registerUser, role }}>
       {children}
     </AuthContext.Provider>
   );

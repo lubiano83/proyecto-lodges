@@ -25,4 +25,5 @@ export default interface AuthInterface {
   phone: string;
   setPhone: (phone: string) => void;
   registerUser: () => void;
+  role: string;
 }

@@ -1,12 +1,13 @@
 "use client";
 import useAuth from "@/app/hooks/useAuth";
-import GoToLogin from "../GoToLogin";
+import { Role } from "@/app/enum/role.enum";
+import NotEnter from "../NotEnter";
 
 export default function Admin() {
 
-    const { quantityRegistered, quantityLogged, user } = useAuth();
-
-    if(!user) return <GoToLogin />;
+    const { quantityRegistered, quantityLogged, user, role } = useAuth();
+    
+    if(role === Role.user || !user) return <NotEnter />;
 
     return (
         <div className="w-full h-full flex flex-col justify-center items-center">
