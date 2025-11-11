@@ -97,7 +97,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setState("");
           setAddress("");
           setPhone("");
-          router.push("/pages/auth/profile");
+          router.push("/auth/profile");
           return data.payload;
       } else {
         const error = await response.json();
@@ -163,7 +163,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setState("");
           setAddress("");
           setPassword("");
-          router.push("/pages/auth/login");
+          router.push("/auth/login");
           return data.payload;
       } else {
         const error = await response.json();
