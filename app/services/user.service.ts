@@ -149,6 +149,7 @@ export default class UserService {
             res.cookies.set(process.env.COOKIE_NAME!, "", { httpOnly: true, secure: true, sameSite: "strict", maxAge: 0, path: "/" });
             return res;
         } catch (error) {
+            console.log(error)
             return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
         }
     };

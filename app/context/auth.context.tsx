@@ -122,6 +122,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return data.payload;
       } else {
         const error = await response.json();
+        console.log(error.message)
         alert(error.message);
         return;
       }
@@ -184,6 +185,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (response.ok) {
         const data = await response.json();
         await getUserByEmail(data.email);
+        setEmail(data.email);
         setRole(data.role);
         return data.payload;
       } else {

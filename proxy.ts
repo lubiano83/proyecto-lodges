@@ -8,10 +8,7 @@ export default function middleware(req: NextRequest) {
     const token = req.cookies.get(String(process.env.COOKIE_NAME))?.value;
 
     if (!token) {
-      // Si no hay token:
-      if (path.startsWith("/api") || path.startsWith("/admin")) {
-        return NextResponse.redirect(new URL("/", req.url));
-      }
+      if (path.startsWith("/admin")) return NextResponse.redirect(new URL("/", req.url));
       // Para páginas (admin) lo mando al home (o al login si quieres)
       return NextResponse.redirect(new URL("/", req.url));
     }
