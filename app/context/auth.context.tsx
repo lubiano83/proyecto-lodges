@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const usersRegistered = async () => {
     try {
-      const response = await fetch("/api/users/registered", {
+      const response = await fetch("/api/admin/registered", {
         method: "GET",
       });
       const data = await response.json();
@@ -43,13 +43,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const usersLogged = async() => {
     try {
-      const response = await fetch("/api/users/logged", {
+      const response = await fetch("/api/admin/logged", {
           method: "GET"
       });
       const data = await response.json();
       setQuantityLogged(data.payload);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -78,7 +78,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       setEmail("");
       setPassword("");
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -105,7 +105,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -127,7 +127,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -141,7 +141,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(data.payload);
       return;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -171,7 +171,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -192,7 +192,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
