@@ -29,7 +29,7 @@ export default function Profile() {
                 </div>
             </div>
             <div className="flex justify-center items-center">
-                <Link href={`/pages/auth/profile/update/${user.email}`}>
+                <Link href={`/auth/profile/update/${user.email}`}>
                     <Boton>Actualizar</Boton>
                 </Link>
             </div>

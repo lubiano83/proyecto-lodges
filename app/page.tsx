@@ -16,7 +16,7 @@ export default function Home() {
         <FB_Carousel />
         <Texto />
       </div>
-      <Link href={"/pages/lodges"}>
+      <Link href={"/lodges"}>
         <Boton>Reservar</Boton>
       </Link>
     </div>

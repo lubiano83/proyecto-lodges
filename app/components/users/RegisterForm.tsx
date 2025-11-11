@@ -25,7 +25,7 @@ export default function RegisterForm() {
         <input type="text" name="address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Ingresa tu direccion.." className="bg-(--color3) rounded-lg h-8 w-full min-w-72 text-(--color4) px-2 shadow-sm shadow-gray-700" />
         <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Ingresa tu password.." className="bg-(--color3) rounded-lg h-8 w-full min-w-72 text-(--color4) px-2 shadow-sm shadow-gray-700" />
         <div className="w-full flex justify-center items-center gap-2">
-          <Link href={"/pages/auth/login"}>
+          <Link href={"/auth/login"}>
             <Boton>Login</Boton>
           </Link>
           <Boton>Registrar</Boton>

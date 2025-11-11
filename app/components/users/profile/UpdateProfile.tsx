@@ -25,7 +25,7 @@ export default function UpdateProfile({ email }: { email: string }) {
             <input type="text" name="state" value={state} onChange={(e) => setState(e.target.value)} placeholder="Ingresa tu ciudad.." className="bg-(--color3) rounded-lg h-8 w-full min-w-72 text-(--color4) px-2 shadow-sm shadow-gray-700" />
             <input type="text" name="address" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Ingresa tu direccion.." className="bg-(--color3) rounded-lg h-8 w-full min-w-72 text-(--color4) px-2 shadow-sm shadow-gray-700" />
             <div className="w-full flex justify-center items-center gap-2">
-                <Link href={"/pages/auth/profile"}>
+                <Link href={"/auth/profile"}>
                     <Boton>Volver</Boton>
                 </Link>
                 <Boton>Modificar</Boton>

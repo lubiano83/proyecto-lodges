@@ -1,12 +1,7 @@
-import { NextResponse } from "next/server";
 import NewUserDto from "@/app/dto/new-user.dto";
 import UserService from "@/app/services/user.service";
 
 const userService = new UserService();
-
-export async function GET() {
-  return await userService.getUsers()
-}
 
 export async function POST(req: Request) {
   const body = await req.json();

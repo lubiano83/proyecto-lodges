@@ -15,26 +15,6 @@ const userDao = new UserDao();
 
 export default class UserService {
 
-    getUsers = async(): Promise<UserDto[] | NextResponse> => {
-        try {
-            const users = await userDao.getUsers();
-            const userDto: UserDto[] = users.map((user) => ({
-                image: user.image,
-                email: user.email,
-                name: user.name,
-                lastname: user.lastname,
-                phone: user.phone,
-                country: user.country,
-                state: user.state,
-                address: user.address,
-                updated_at: user.updated_at
-            }));
-            return NextResponse.json({ payload: userDto }, { status: 200 });
-        } catch (error) {
-            return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
-        }
-    };
-
     usersRegistered = async(): Promise<number | NextResponse | undefined> => {
         try {
             const users = (await userDao.getUsers()).length;

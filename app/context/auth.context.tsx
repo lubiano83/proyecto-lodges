@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json();
       setQuantityRegistered(data.payload);
     } catch (error) {
-      throw new Error("Hubo un error en el context..");
+      console.log(error)
     }
   };
 
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json();
       setQuantityLogged(data.payload);
     } catch (error) {
-      throw new Error("Hubo un error en el context..");
+      console.log(error)
     }
   };
 
@@ -76,7 +76,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     } catch (error) {
-      throw new Error("Hubo un error en el context..");
+      setEmail("");
+      setPassword("");
+      console.log(error)
     }
   };
 
@@ -103,7 +105,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     } catch (error) {
-      throw new Error("Hubo un error en el context..");
+      console.log(error)
     }
   };
 
@@ -124,7 +126,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     } catch (error) {
-      throw new Error("Hubo un error en el context..");
+      console.log(error)
     }
   };
 
@@ -138,7 +140,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(data.payload);
       return;
     } catch (error) {
-      throw new Error("Hubo un error en el context..");
+      console.log(error)
     }
   };
 
@@ -168,7 +170,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     } catch (error) {
-      throw new Error("Hubo un error en el context..");
+      console.log(error)
     }
   };
 
@@ -188,7 +190,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
     } catch (error) {
-      throw new Error("Hubo un error en el context..");
+      console.log(error)
     }
   };
 

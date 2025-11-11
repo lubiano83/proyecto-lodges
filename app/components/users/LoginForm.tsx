@@ -19,7 +19,7 @@ export default function LoginForm() {
         <input type="text" name="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Ingresa tu email.." className="bg-(--color3) rounded-lg h-8 w-full min-w-72 text-(--color4) px-2 shadow-sm shadow-gray-700" />
         <input type="password" name="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Ingresa tu password.." className="bg-(--color3) rounded-lg h-8 w-full min-w-72 text-(--color4) px-2 shadow-sm shadow-gray-700" />
         <div className="w-full flex justify-center items-center gap-2">
-          <Link href={"/pages/auth/register"}>
+          <Link href={"/auth/register"}>
             <Boton>Registrar</Boton>
           </Link>
           <Boton>Ingresar</Boton>
