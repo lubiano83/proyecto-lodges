@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkSession();
     usersRegistered();
     usersLogged();
-  }, []);
+  }, [user]);
 
   const usersRegistered = async () => {
     try {
