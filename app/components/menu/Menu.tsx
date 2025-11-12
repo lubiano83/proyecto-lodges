@@ -7,6 +7,7 @@ import { Role } from "@/app/enum/role.enum";
 export default function Menu( { handleShow }: { handleShow: () => void} ) {
 
     const { logoutUser, user, role } = useAuth();
+    console.log("user role:", role)
 
     return (
         <aside className="fixed left-0 top-0 w-64 h-full bg-medium flex flex-col justify-center items-center z-3 bg-(--color1) text-(--color3) text-lg">

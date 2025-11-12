@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkSession();
     usersRegistered();
     usersLogged();
-  }, [user]);
+  }, []);
 
   const usersRegistered = async () => {
     try {
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (response.ok) {
           const data = await response.json();
           await usersLogged();
-          await getUserByEmail(email);
+          await checkSession();
           setEmail("");
           setPassword("");
           router.push("/");
@@ -117,6 +117,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
       if (response.ok) {
         const data = await response.json();
+        await checkSession();
         setUser(null);
         router.push("/");
         return data.payload;
