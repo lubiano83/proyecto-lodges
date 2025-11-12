@@ -8,7 +8,7 @@ export default function UpdateProfile({ email }: { email: string }) {
 
     const { updateUserByEmail, name, setName, lastname, setLastname, country, setCountry, state, setState, address, setAddress, user, phone, setPhone } = useAuth();
 
-     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    const handleSubmit = async(e: React.FormEvent<HTMLFormElement>): Promise<void> => {
       e.preventDefault();
       await updateUserByEmail(email);
     };

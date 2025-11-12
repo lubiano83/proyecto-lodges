@@ -167,7 +167,8 @@ export default class UserService {
         try {
             let user = await userDao.getUserByEmail(email);
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
-            user.image = changeImageDto.image ? changeImageDto.image : user.image;
+            if(!changeImageDto.image) return NextResponse.json({ message: "Debes seleccionar una imagen" }, { status: 400 });
+            user.image = changeImageDto.image;
             await userDao.saveUser(user);
             const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
             return NextResponse.json({ payload: userDto }, { status: 200 });

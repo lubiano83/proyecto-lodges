@@ -20,6 +20,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [ state, setState ] = useState<string>("");
   const [ address, setAddress ] = useState<string>("");
   const [ role, setRole ] = useState<string>("user");
+  const [image, setImage] = useState("");
 
   const router = useRouter();
 
@@ -197,8 +198,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const changeImage = async(email: string) => {
+    try {
+      const response = await fetch(`/api/users/auth/${email}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setImage("");
+        console.log(data.payload);
+        return data.payload;
+      } else {
+        const error = await response.json();
+        alert(error.message);
+        setImage("");
+      }
+    } catch (error) {
+      console.log(error);
+    }};
+
   return (
-    <AuthContext.Provider value={{ quantityRegistered, quantityLogged, loginUser, email, setEmail, password, setPassword, logoutUser, getUserByEmail, user, updateUserByEmail, name, setName, lastname, setLastname, country, setCountry, state, setState, address, setAddress, phone, setPhone, registerUser, role }}>
+    <AuthContext.Provider value={{ quantityRegistered, quantityLogged, loginUser, email, setEmail, password, setPassword, logoutUser, getUserByEmail, user, updateUserByEmail, name, setName, lastname, setLastname, country, setCountry, state, setState, address, setAddress, phone, setPhone, registerUser, role, changeImage, image, setImage }}>
       {children}
     </AuthContext.Provider>
   );
