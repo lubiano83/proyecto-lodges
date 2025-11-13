@@ -1,16 +1,15 @@
 import { bucket } from "@/app/config/firebase.config";
 
-export async function uploadUserImage( fileBuffer: Buffer, email: string ): Promise<string> {
+export async function uploadUserImage( fileBuffer: Buffer, email: string ): Promise<string | undefined> {
   try {
     const filePath = `users/${email}/profile.webp`;
     const file = bucket.file(filePath);
-    const imageDeleted = await file.delete();
-    console.log("image deleted:", imageDeleted);
+    await file.delete();
     await file.save(fileBuffer, { contentType: "image/webp", public: true });
-    const [url] = await file.getSignedUrl({ action: "read", expires: "2100-01-01" })
-    return url;
+    const [url] = await file.getSignedUrl({ action: "read", expires: "2100-01-01" });
+    const versionedUrl = `${url}&v=${Date.now()}`; // 👈 anti caché
+    return versionedUrl;
   } catch (error) {
-    console.error("❌ Error subiendo imagen a Firebase Storage:", error);
-    throw error;
+    console.log(error);
   }
 }
