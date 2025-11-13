@@ -29,4 +29,11 @@ export default interface AuthInterface {
   changeImageByEmail: (email: string) => void;
   image: File | null;
   setImage: (image: File | null) => void;
+  oldPassword: string;
+  setOldPassword: (oldPassword: string) => void;
+  newPassword: string;
+  setNewPassword: (newPassword: string) => void;
+  repeatNewPassword: string;
+  setRepeatNewPassword: (repeatNewPassword: string) => void;
+  changePasswordByEmail: (email: string) => void;
 }

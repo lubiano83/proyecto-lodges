@@ -14,7 +14,7 @@ export default function Navbar( { toggleDarkMode, handleShow, isDarkMode, user }
             </div>
 
             { isDarkMode ? <SvgImage src="/moon-svgrepo-com-white.svg" fnc={toggleDarkMode} size={33} /> :  <SvgImage src="/sun-4-svgrepo-com-white.svg" fnc={toggleDarkMode} size={33} /> }
-            <Link href={"/auth/profile"}>
+            <Link href={"/auth/profile"} className={`${user && user.image ? "bg-(--color3) rounded-4xl" : "bg-(--color1)"}`}>
                 <SvgImage src={user && user.image ? user.image : "/user-circle-svgrepo-com-white.svg"} size={35} />
             </Link>
         </header>

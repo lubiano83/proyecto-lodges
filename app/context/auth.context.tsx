@@ -21,6 +21,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [ address, setAddress ] = useState<string>("");
   const [ role, setRole ] = useState<string>("user");
   const [image, setImage] = useState<File | null>(null);
+  const [ oldPassword, setOldPassword ] = useState<string>("");
+  const [ newPassword, setNewPassword ] = useState<string>("");
+  const [ repeatNewPassword, setRepeatNewPassword ] = useState<string>("");
 
   const router = useRouter();
 
@@ -211,7 +214,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const data = await response.json();
         await getUserByEmail(email);
         setImage(null);
-        router.push("/auth/profile")
+        router.push("/auth/profile");
         return data.payload;
       } else {
         const error = await response.json();
@@ -222,8 +225,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log(error);
     }};
 
+    const changePasswordByEmail = async(email: string) => {
+      try {
+        const response = await fetch(`/api/users/auth/password/${email}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ oldPassword, newPassword, repeatNewPassword }
+        )});
+        if(response.ok) {
+          const data = await response.json();
+          setOldPassword("");
+          setNewPassword("");
+          setRepeatNewPassword("");
+          router.push("/auth/profile");
+          return data.payload;
+        } else {
+          const error = await response.json();
+          setOldPassword("");
+          setNewPassword("");
+          setRepeatNewPassword("");
+          alert(error.message);
+        };
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
   return (
-    <AuthContext.Provider value={{ quantityRegistered, quantityLogged, loginUser, email, setEmail, password, setPassword, logoutUser, getUserByEmail, user, updateUserByEmail, name, setName, lastname, setLastname, country, setCountry, state, setState, address, setAddress, phone, setPhone, registerUser, role, changeImageByEmail, image, setImage }}>
+    <AuthContext.Provider value={{ quantityRegistered, quantityLogged, loginUser, email, setEmail, password, setPassword, logoutUser, getUserByEmail, user, updateUserByEmail, name, setName, lastname, setLastname, country, setCountry, state, setState, address, setAddress, phone, setPhone, registerUser, role, changeImageByEmail, image, setImage, oldPassword, setOldPassword, newPassword, setNewPassword, repeatNewPassword, setRepeatNewPassword, changePasswordByEmail }}>
       {children}
     </AuthContext.Provider>
   );

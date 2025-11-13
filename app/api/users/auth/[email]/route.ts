@@ -13,5 +13,5 @@ export async function PATCH(req: Request, { params }: { params: { email: string 
   const file = form.get("image") as File;
   const arrayBuffer = await file.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
-  return await userService.changeImage(email, buffer);
+  return await userService.changeImageByEmail(email, buffer);
 }

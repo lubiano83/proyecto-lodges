@@ -28,7 +28,10 @@ export default function Profile() {
                     <h3><strong>Actualizado:</strong> {new Date(user.updated_at).toLocaleDateString("es-CL", { day: "2-digit", month: "long", year: "numeric" })}</h3>
                 </div>
             </div>
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center gap-2">
+                <Link href={`/auth/password/${user.email}`}>
+                    <Boton>Contraseña</Boton>
+                </Link>
                 <Link href={`/auth/update/${user.email}`}>
                     <Boton>Actualizar</Boton>
                 </Link>

@@ -11,6 +11,7 @@ import jwt from "jsonwebtoken";
 import JwtInterface from "../interface/jwt.interface";
 import { convertToWebp } from "../utils/convertToWebp";
 import { uploadUserImage } from "../utils/uploadUserImage";
+import ChangePasswordDto from "../dto/change-password.dt";
 
 const userDao = new UserDao();
 
@@ -134,9 +135,15 @@ export default class UserService {
             if(!loginUserDto.email || !loginUserDto.password) return NextResponse.json({ message: "Todos los campos son requeridos.." }, { status: 400 });
             let user = await userDao.getUserByEmail(loginUserDto.email);
             if (!user) return NextResponse.json({ message: "Credenciales invalidas.."}, { status: 401 });
+            if(user.login_attempts >= 3) return NextResponse.json({ message: "Tu cuenta a sido bloqueada, recupera tu contraseña.." }, { status: 400 });
             const isValid = await isValidPassword(loginUserDto.password, user?.password);
-            if (!isValid) return NextResponse.json({ message: "Credenciales invalidas.."}, { status: 401 });
+            if (!isValid) {
+                user.login_attempts++
+                await userDao.saveUser(user);
+                return NextResponse.json({ message: "Credenciales invalidas.."}, { status: 401 });
+            };
             user.is_active = true;
+            user.login_attempts = 0;
             await userDao.saveUser(user);
             const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
             const token = jwt.sign({ email: userDto.email, role: user.role }, process.env.COOKIE_KEY!, { expiresIn: "30m" });
@@ -164,7 +171,7 @@ export default class UserService {
         }
     };
 
-    changeImage = async(email: string, imageBuffer: Buffer) => {
+    changeImageByEmail = async(email: string, imageBuffer: Buffer) => {
         try {
             let user = await userDao.getUserByEmail(email);
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
@@ -172,10 +179,28 @@ export default class UserService {
             if(!imageToWebp) return NextResponse.json({ message: "Problema para convertir la imagen a webp.." }, { status: 500 });
             const imageUrl = await uploadUserImage(imageToWebp, user.email);
             if(!imageUrl) return NextResponse.json({ message: "Problema para convertir la imagen a string y subirla al servidor" }, { status: 500 });
-            console.log("imagen en firebase:", imageUrl);
             user.image = imageUrl;
             await userDao.saveUser(user);
             const userDto: UserDto = { image: imageUrl, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            return NextResponse.json({ payload: userDto }, { status: 200 });
+        } catch (error) {
+            return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
+        }
+    };
+
+    changePasswordByEmail = async(email: string, changePasswordDto: ChangePasswordDto): Promise<UserDto | NextResponse> => {
+        try {
+            let user = await userDao.getUserByEmail(email);
+            if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
+            const isValid = await isValidPassword(changePasswordDto.oldPassword, user?.password);
+            if(!isValid || changePasswordDto.newPassword !== changePasswordDto.repeatNewPassword) {
+                user.login_attempts++
+                await userDao.saveUser(user);
+                return NextResponse.json({ message: "Las password no coinciden.." });
+            };
+            user.password = await createHash(changePasswordDto.newPassword);
+            await userDao.saveUser(user);
+            const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
             return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
             return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
