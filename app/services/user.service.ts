@@ -6,10 +6,11 @@ import LoginUserDto from "../dto/login-user.dto";
 import UserDao from "../dao/user.dao";
 import UserDto from "../dto/user.dto";
 import { NextRequest, NextResponse } from "next/server";
-import ChangeImageDto from "../dto/change-Image.dto";
 import { isValidPassword, createHash } from "../utils/bcrypt.utils";
 import jwt from "jsonwebtoken";
 import JwtInterface from "../interface/jwt.interface";
+import { convertToWebp } from "../utils/convertToWebp";
+import { uploadUserImage } from "../utils/uploadUserImage";
 
 const userDao = new UserDao();
 
@@ -163,14 +164,18 @@ export default class UserService {
         }
     };
 
-    changeImage = async(email: string, changeImageDto: ChangeImageDto) => {
+    changeImage = async(email: string, imageBuffer: Buffer) => {
         try {
             let user = await userDao.getUserByEmail(email);
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
-            if(!changeImageDto.image) return NextResponse.json({ message: "Debes seleccionar una imagen" }, { status: 400 });
-            user.image = changeImageDto.image;
+            const imageToWebp = await convertToWebp(imageBuffer);
+            if(!imageToWebp) return NextResponse.json({ message: "Problema para convertir la imagen a webp.." }, { status: 500 });
+            const imageUrl = await uploadUserImage(imageToWebp, user.email);
+            if(!imageUrl) return NextResponse.json({ message: "Problema para convertir la imagen a string y subirla al servidor" }, { status: 500 });
+            console.log("imagen en firebase:", imageUrl);
+            user.image = imageUrl;
             await userDao.saveUser(user);
-            const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
+            const userDto: UserDto = { image: imageUrl, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
             return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
             return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });

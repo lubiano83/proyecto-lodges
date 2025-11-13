@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [ state, setState ] = useState<string>("");
   const [ address, setAddress ] = useState<string>("");
   const [ role, setRole ] = useState<string>("user");
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState<File | null>(null);
 
   const router = useRouter();
 
@@ -120,11 +120,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const data = await response.json();
         await checkSession();
         setUser(null);
+        setEmail("");
         router.push("/");
         return data.payload;
       } else {
         const error = await response.json();
-        console.log(error.message)
         alert(error.message);
         return;
       }
@@ -165,7 +165,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setState("");
           setAddress("");
           setPassword("");
-          router.push("/auth/login");
+          router.push("/login");
           return data.payload;
       } else {
         const error = await response.json();
@@ -198,29 +198,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const changeImage = async(email: string) => {
+  const changeImageByEmail = async(email: string) => {
     try {
+      if (!image) throw new Error("Debes seleccionar una imagen");
+      const formData = new FormData();
+      formData.append("image", image);
       const response = await fetch(`/api/users/auth/${email}`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ image })
+        body: formData
       });
       if (response.ok) {
         const data = await response.json();
-        setImage("");
-        console.log(data.payload);
+        await getUserByEmail(email);
+        setImage(null);
+        router.push("/auth/profile")
         return data.payload;
       } else {
         const error = await response.json();
         alert(error.message);
-        setImage("");
+        setImage(null);
       }
     } catch (error) {
       console.log(error);
     }};
 
   return (
-    <AuthContext.Provider value={{ quantityRegistered, quantityLogged, loginUser, email, setEmail, password, setPassword, logoutUser, getUserByEmail, user, updateUserByEmail, name, setName, lastname, setLastname, country, setCountry, state, setState, address, setAddress, phone, setPhone, registerUser, role, changeImage, image, setImage }}>
+    <AuthContext.Provider value={{ quantityRegistered, quantityLogged, loginUser, email, setEmail, password, setPassword, logoutUser, getUserByEmail, user, updateUserByEmail, name, setName, lastname, setLastname, country, setCountry, state, setState, address, setAddress, phone, setPhone, registerUser, role, changeImageByEmail, image, setImage }}>
       {children}
     </AuthContext.Provider>
   );
