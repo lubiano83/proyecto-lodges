@@ -3,20 +3,19 @@
 @source "../.flowbite-react/class-list.json";
 
 :root {
-  --color1: #5EA529;
-  --color2: #D8F999;
-  --color3: #FAFAF9;
-  --color4: #192E03;
-  --color5: #F54927;
-  --color6: #FF692A;
-  
+  --color1: #5ea529;
+  --color2: #d8f999;
+  --color3: #fafaf9;
+  --color4: #192e03;
+  --color5: #f54927;
+  --color6: #ff692a;
 }
 
 .dark {
-  --color1: #1D293D;
-  --color2: #CAD5E2;
-  --color3: #FAFAF9;
+  --color1: #1d293d;
+  --color2: #cad5e2;
+  --color3: #fafaf9;
   --color4: #020618;
-  --color5: #FE9A37;
-  --color6: #F0B13B;
+  --color5: #fe9a37;
+  --color6: #f0b13b;
 }

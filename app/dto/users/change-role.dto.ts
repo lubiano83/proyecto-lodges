@@ -1,5 +1,3 @@
 export default class ChangeRoleDto {
-
-    role: string;
-    
-};
+  role: string;
+}

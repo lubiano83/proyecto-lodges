@@ -5,6 +5,9 @@ const userService = new UserService();
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const loginUserDto: LoginUserDto = { email: body.email, password: body.password };
+  const loginUserDto: LoginUserDto = {
+    email: body.email,
+    password: body.password,
+  };
   return await userService.loginUser(loginUserDto);
 }

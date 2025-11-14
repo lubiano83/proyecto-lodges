@@ -4,7 +4,8 @@ import { AuthContext } from "../context/auth.context";
 
 const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useUser debe usarse dentro de un UserProvider");
+  if (!context)
+    throw new Error("useUser debe usarse dentro de un UserProvider");
   return context;
 };
 

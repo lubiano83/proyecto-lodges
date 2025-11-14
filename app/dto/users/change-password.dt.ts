@@ -1,7 +1,5 @@
-export default class ChangePasswordDto{
-
-    oldPassword: string;
-    newPassword: string;
-    repeatNewPassword: string;
-
-};
+export default class ChangePasswordDto {
+  oldPassword: string;
+  newPassword: string;
+  repeatNewPassword: string;
+}

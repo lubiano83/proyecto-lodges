@@ -1,5 +1,3 @@
 export default class RecoverPasswordDto {
-
-    email: string;
-
-};
+  email: string;
+}

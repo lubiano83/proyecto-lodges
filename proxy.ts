@@ -7,8 +7,10 @@ export default function middleware(req: NextRequest) {
     const token = req.cookies.get(String(process.env.COOKIE_NAME))?.value;
 
     if (!token) {
-      if(path.startsWith("/auth")) return NextResponse.redirect(new URL("/login", req.url));
-      if(path.startsWith("/admin")) return NextResponse.redirect(new URL("/forbidden", req.url));
+      if (path.startsWith("/auth"))
+        return NextResponse.redirect(new URL("/login", req.url));
+      if (path.startsWith("/admin"))
+        return NextResponse.redirect(new URL("/forbidden", req.url));
       return NextResponse.next();
     }
 

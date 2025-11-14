@@ -1,5 +1,4 @@
 export default interface UserInterface {
-
   image: string;
   email: string;
   name: string;
@@ -9,5 +8,4 @@ export default interface UserInterface {
   state: string;
   country: string;
   updated_at: string;
-
 }

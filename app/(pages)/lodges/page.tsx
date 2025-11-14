@@ -1,7 +1,3 @@
 export default function Lodges() {
-    return (
-        <div>
-            Lodges
-        </div>
-    )
-};
+  return <div>Lodges</div>;
+}

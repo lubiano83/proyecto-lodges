@@ -4,19 +4,17 @@ import { DataSource } from "typeorm";
 import UserEntity from "../entity/user.entity";
 
 // Tomamos las variables que SÍ tienes en tu .env
-const {
-  MYSQL_USER,
-  MYSQL_PASSWORD,
-  MYSQL_DATABASE,
-  HOST_DB_PORT,
-} = process.env;
+const { MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE, HOST_DB_PORT } =
+  process.env;
 
 // 👇 Next.js se conecta al puerto del host (3307) en 127.0.0.1
 const DB_HOST = "127.0.0.1";
 const DB_PORT = Number(HOST_DB_PORT ?? 3306);
 
 if (!MYSQL_USER || !MYSQL_PASSWORD || !MYSQL_DATABASE) {
-  throw new Error("⚠️ Faltan variables MYSQL_USER / MYSQL_PASSWORD / MYSQL_DATABASE en tu .env");
+  throw new Error(
+    "⚠️ Faltan variables MYSQL_USER / MYSQL_PASSWORD / MYSQL_DATABASE en tu .env"
+  );
 }
 
 let dataSource: DataSource;
@@ -24,13 +22,13 @@ let dataSource: DataSource;
 function createDataSource() {
   return new DataSource({
     type: "mysql",
-    host: DB_HOST,          // 127.0.0.1 (host)
-    port: DB_PORT,          // 3307 (mappeado desde Docker)
-    username: MYSQL_USER,   // bootuser
+    host: DB_HOST, // 127.0.0.1 (host)
+    port: DB_PORT, // 3307 (mappeado desde Docker)
+    username: MYSQL_USER, // bootuser
     password: MYSQL_PASSWORD,
     database: MYSQL_DATABASE,
     entities: [UserEntity],
-    synchronize: false,     // true solo si quieres que TypeORM cree/ajuste tablas en dev
+    synchronize: false, // true solo si quieres que TypeORM cree/ajuste tablas en dev
     logging: false,
   });
 }
