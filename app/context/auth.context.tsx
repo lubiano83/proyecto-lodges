@@ -186,18 +186,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         method: "GET",
         credentials: "include",
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        await getUserByEmail(data.email);
-        setEmail(data.email);
-        setRole(data.role);
-        return data.payload;
-      } else {
-        return;
-      }
+      if (!response.ok) return null;
+      const data = await response.json();
+      await getUserByEmail(data.email);
+      setEmail(data.email);
+      setRole(data.role);
+      return data.payload;
     } catch (error) {
-      console.log(error);
+      console.log("Error en checkSession", error);
+      return null;
     }
   };
 
@@ -279,7 +276,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         });
         if(response.ok) {
           const data = response.json();
+          await getUserByEmail(email);
           router.push("/admin");
+          return data;
         } else {
           const error = await response.json();
           alert(error.message);
