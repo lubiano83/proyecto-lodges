@@ -1,4 +1,4 @@
-import LoginUserDto from "@/app/dto/login-user.dto";
+import LoginUserDto from "@/app/dto/users/login-user.dto";
 import UserService from "@/app/services/user.service";
 
 const userService = new UserService();

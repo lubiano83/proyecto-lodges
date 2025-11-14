@@ -1,20 +1,20 @@
-import NewUserDto from "../dto/new-user.dto";
+import NewUserDto from "../dto/users/new-user.dto";
 import { Role } from "../enum/role.enum";
-import UpdateUserDto from "../dto/update-user.dto";
-import ChangeRoleDto from "../dto/change-role.dto";
-import LoginUserDto from "../dto/login-user.dto";
+import UpdateUserDto from "../dto/users/update-user.dto";
+import ChangeRoleDto from "../dto/users/change-role.dto";
+import LoginUserDto from "../dto/users/login-user.dto";
 import UserDao from "../dao/user.dao";
-import UserDto from "../dto/user.dto";
+import UserDto from "../dto/users/user.dto";
 import { NextRequest, NextResponse } from "next/server";
 import { isValidPassword, createHash } from "../utils/bcrypt.utils";
 import jwt from "jsonwebtoken";
 import JwtInterface from "../interface/jwt.interface";
 import { convertToWebp } from "../utils/convertToWebp.utils";
 import { uploadUserImage } from "../utils/uploadUserImage.utils";
-import ChangePasswordDto from "../dto/change-password.dt";
-import RecoverPasswordDto from "../dto/recover-password.dto";
+import ChangePasswordDto from "../dto/users/change-password.dt";
+import RecoverPasswordDto from "../dto/users/recover-password.dto";
 import generateRandomPassword from "../utils/generateRandomPassword.utils";
-import sendPasswordEmail from "../utils/nodemailer.utils";
+import sendPasswordEmail from "../utils/sendPasswordEmail.utils";
 
 const userDao = new UserDao();
 

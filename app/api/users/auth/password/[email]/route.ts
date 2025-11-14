@@ -1,4 +1,4 @@
-import ChangePasswordDto from "@/app/dto/change-password.dt";
+import ChangePasswordDto from "@/app/dto/users/change-password.dt";
 import UserService from "@/app/services/user.service";
 
 const userService = new UserService();

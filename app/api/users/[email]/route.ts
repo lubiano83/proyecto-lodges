@@ -1,6 +1,6 @@
 import UserService from "@/app/services/user.service";
-import UpdateUserDto from "@/app/dto/update-user.dto";
-import ChangeRoleDto from "@/app/dto/change-role.dto";
+import UpdateUserDto from "@/app/dto/users/update-user.dto";
+import ChangeRoleDto from "@/app/dto/users/change-role.dto";
 
 const userService = new UserService();
 

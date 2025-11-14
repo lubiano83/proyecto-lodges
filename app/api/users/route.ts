@@ -1,5 +1,5 @@
-import NewUserDto from "@/app/dto/new-user.dto";
-import RecoverPasswordDto from "@/app/dto/recover-password.dto";
+import NewUserDto from "@/app/dto/users/new-user.dto";
+import RecoverPasswordDto from "@/app/dto/users/recover-password.dto";
 import UserService from "@/app/services/user.service";
 
 const userService = new UserService();
