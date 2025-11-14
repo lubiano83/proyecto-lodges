@@ -36,4 +36,6 @@ export default interface AuthInterface {
   repeatNewPassword: string;
   setRepeatNewPassword: (repeatNewPassword: string) => void;
   changePasswordByEmail: (email: string) => void;
+  recoverPasswordByEmail: () => void;
+  changeRoleByEmail: (emial: string) => void;
 }

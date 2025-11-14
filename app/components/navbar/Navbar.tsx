@@ -3,6 +3,7 @@ import Link from "next/link";
 import Logo from "../Logo";
 import SvgImage from "./SvgImage";
 import UserInterface from "@/app/interface/user.interface";
+import ProfileImage from "../users/profile/ProfileImage";
 
 export default function Navbar( { toggleDarkMode, handleShow, isDarkMode, user }: { toggleDarkMode: () => void, handleShow: () => void, isDarkMode: boolean, user: UserInterface | null } ) {
 
@@ -14,8 +15,10 @@ export default function Navbar( { toggleDarkMode, handleShow, isDarkMode, user }
             </div>
 
             { isDarkMode ? <SvgImage src="/moon-svgrepo-com-white.svg" fnc={toggleDarkMode} size={33} /> :  <SvgImage src="/sun-4-svgrepo-com-white.svg" fnc={toggleDarkMode} size={33} /> }
-            <Link href={"/auth/profile"} className={`${user && user.image ? "bg-(--color3) rounded-4xl" : "bg-(--color1)"}`}>
-                <SvgImage src={user && user.image ? user.image : "/user-circle-svgrepo-com-white.svg"} size={35} />
+            <Link href={"/auth/profile"}>
+                <div className={`${user && user?.image ? "bg-(--color3)" : "bg-(--color1)"} aspect-square w-9 h-9 rounded-full overflow-hidden flex justify-center items-center`}>
+                    {user?.image ? <ProfileImage image={user.image} /> : <SvgImage src={"/user-circle-svgrepo-com-white.svg"} size={35} />}
+                </div>
             </Link>
         </header>
     )

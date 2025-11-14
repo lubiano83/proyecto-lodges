@@ -5,11 +5,11 @@ import useAuth from "@/app/hooks/useAuth";
 
 export default function Recover() {
 
-    const { email, setEmail } = useAuth();
+    const { email, setEmail, recoverPasswordByEmail } = useAuth();
 
     const handleSubmit = async(e: React.FormEvent<HTMLFormElement>): Promise<void> => {
       e.preventDefault();
-    //   await changePasswordByEmail(email);
+      await recoverPasswordByEmail();
     };
 
     return (

@@ -151,7 +151,7 @@ export default class UserService {
             const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
             const token = jwt.sign({ email: userDto.email, role: user.role }, process.env.COOKIE_KEY!, { expiresIn: "30m" });
             const res = NextResponse.json({ payload: userDto }, { status: 200 });
-            res.cookies.set(process.env.COOKIE_NAME!, token, { httpOnly: true, secure: true, sameSite: "strict", maxAge: 60 * 30, path: "/" });
+            res.cookies.set(process.env.COOKIE_NAME!, token, { httpOnly: true, secure: false, sameSite: "lax", maxAge: 60 * 30, path: "/" });
             return res;
         } catch (error) {
             return NextResponse.json({ message: "Hubo un problema en el backend.." }, { status: 500 });
