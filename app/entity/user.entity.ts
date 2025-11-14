@@ -1,6 +1,5 @@
 import { Role } from "../enum/role.enum";
 import { Entity, PrimaryColumn, Column } from "typeorm";
-import { createHash } from "@/app/utils/bcrypt.utils";
 
 @Entity({ name: "USERS" })
 export default class UserEntity {
@@ -30,7 +29,7 @@ export default class UserEntity {
     @Column({ type: "varchar", length: 72 })
     password: string;
 
-    @Column({ type: "varchar", length: 255 })
+    @Column({ type: "text" })
     image: string;
 
     @Column({ type: "varchar", length: 30 })

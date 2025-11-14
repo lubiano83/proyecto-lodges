@@ -9,9 +9,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { isValidPassword, createHash } from "../utils/bcrypt.utils";
 import jwt from "jsonwebtoken";
 import JwtInterface from "../interface/jwt.interface";
-import { convertToWebp } from "../utils/convertToWebp";
-import { uploadUserImage } from "../utils/uploadUserImage";
+import { convertToWebp } from "../utils/convertToWebp.utils";
+import { uploadUserImage } from "../utils/uploadUserImage.utils";
 import ChangePasswordDto from "../dto/change-password.dt";
+import RecoverPasswordDto from "../dto/recover-password.dto";
+import generateRandomPassword from "../utils/generateRandomPassword.utils";
+import sendPasswordEmail from "../utils/nodemailer.utils";
 
 const userDao = new UserDao();
 
@@ -46,7 +49,7 @@ export default class UserService {
 
     getUserByEmail = async(email: string): Promise<UserDto | NextResponse> => {
         try {
-            const user = await userDao.getUserByEmail(email);
+            const user = await userDao.getUserByEmail(email.toLowerCase().trim());
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
             if(user.is_active === false) return NextResponse.json({ message: "Primero debes iniciar sesion.." }, { status: 401 });
             const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
@@ -63,14 +66,14 @@ export default class UserService {
             const userFounded = users.find(user => user.email === newUserDto.email);
             if(userFounded) return NextResponse.json({ message: "Ese email ya esta registrado.." }, { status: 400 });
             const newUser = await userDao.createUser({
-                email: newUserDto.email,
-                name: newUserDto.name,
-                lastname: newUserDto.lastname,
-                phone: newUserDto.phone,
-                country: newUserDto.country,
-                state: newUserDto.state,
-                address: newUserDto.address,
-                password: await createHash(newUserDto.password),
+                email: newUserDto.email.toLowerCase().trim(),
+                name: newUserDto.name.toLowerCase().trim(),
+                lastname: newUserDto.lastname.toLowerCase().trim(),
+                phone: newUserDto.phone.trim(),
+                country: newUserDto.country.toLowerCase().trim(),
+                state: newUserDto.state.toLowerCase().trim(),
+                address: newUserDto.address.toLowerCase().trim(),
+                password: await createHash(newUserDto.password.trim()),
                 image: "",
                 role: Role.user,
                 is_active: false,
@@ -88,14 +91,14 @@ export default class UserService {
 
     updateUserByEmail = async(email: string, updateUserDto: UpdateUserDto): Promise<UserDto | NextResponse> => {
         try {
-            let user = await userDao.getUserByEmail(email);
+            let user = await userDao.getUserByEmail(email.toLowerCase().trim());
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
-            user.name = updateUserDto.name ? updateUserDto.name :  user.name;
-            user.lastname = updateUserDto.lastname ? updateUserDto.lastname : user.lastname;
-            user.phone = updateUserDto.phone ? updateUserDto.phone : user.phone;
-            user.country = updateUserDto.country ? updateUserDto.country : user.country;
-            user.state = updateUserDto.state ? updateUserDto.state : user.state;
-            user.address = updateUserDto.address ? updateUserDto.address : user.address;
+            user.name = updateUserDto.name ? updateUserDto.name.toLowerCase().trim() :  user.name;
+            user.lastname = updateUserDto.lastname ? updateUserDto.lastname.toLowerCase().trim() : user.lastname;
+            user.phone = updateUserDto.phone ? updateUserDto.phone.trim() : user.phone;
+            user.country = updateUserDto.country ? updateUserDto.country.toLowerCase().trim() : user.country;
+            user.state = updateUserDto.state ? updateUserDto.state.toLowerCase().trim() : user.state;
+            user.address = updateUserDto.address ? updateUserDto.address.toLowerCase().trim() : user.address;
             user.updated_at = new Date();
             await userDao.saveUser(user);
             const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
@@ -107,9 +110,9 @@ export default class UserService {
 
     deleteUserByEmail = async(email: string): Promise<UserDto | NextResponse> => {
         try {
-            const user = await userDao.getUserByEmail(email);
+            const user = await userDao.getUserByEmail(email.toLowerCase().trim());
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
-            userDao.deleteUser(email);
+            userDao.deleteUser(email.toLowerCase().trim());
             const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
             return NextResponse.json({ payload: userDto }, { status: 200 });
         } catch (error) {
@@ -119,9 +122,9 @@ export default class UserService {
 
     changeRoleByEmail = async(email: string, changeRoleDto: ChangeRoleDto ): Promise<UserDto | NextResponse> => {
         try {
-            let user = await userDao.getUserByEmail(email);
+            let user = await userDao.getUserByEmail(email.toLowerCase().trim());
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
-            user.role = changeRoleDto.role ?? user.role;
+            user.role = changeRoleDto.role.toLowerCase().trim() ?? user.role;
             await userDao.saveUser(user);
             const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
             return NextResponse.json({ payload: userDto }, { status: 200 });
@@ -133,10 +136,10 @@ export default class UserService {
     loginUser = async(loginUserDto: LoginUserDto): Promise<UserDto | NextResponse> => {
         try {
             if(!loginUserDto.email || !loginUserDto.password) return NextResponse.json({ message: "Todos los campos son requeridos.." }, { status: 400 });
-            let user = await userDao.getUserByEmail(loginUserDto.email);
+            let user = await userDao.getUserByEmail(loginUserDto.email.toLowerCase().trim());
             if (!user) return NextResponse.json({ message: "Credenciales invalidas.."}, { status: 401 });
             if(user.login_attempts >= 3) return NextResponse.json({ message: "Tu cuenta a sido bloqueada, recupera tu contraseña.." }, { status: 400 });
-            const isValid = await isValidPassword(loginUserDto.password, user?.password);
+            const isValid = await isValidPassword(loginUserDto.password.trim(), user?.password);
             if (!isValid) {
                 user.login_attempts++
                 await userDao.saveUser(user);
@@ -157,7 +160,7 @@ export default class UserService {
 
     logoutUser = async(email: string): Promise<UserDto | NextResponse> => {
         try {
-            let user = await userDao.getUserByEmail(email);
+            let user = await userDao.getUserByEmail(email.toLowerCase().trim());
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
             user.is_active = false;
             await userDao.saveUser(user);
@@ -173,7 +176,7 @@ export default class UserService {
 
     changeImageByEmail = async(email: string, imageBuffer: Buffer) => {
         try {
-            let user = await userDao.getUserByEmail(email);
+            let user = await userDao.getUserByEmail(email.toLowerCase().trim());
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
             const imageToWebp = await convertToWebp(imageBuffer);
             if(!imageToWebp) return NextResponse.json({ message: "Problema para convertir la imagen a webp.." }, { status: 500 });
@@ -190,15 +193,15 @@ export default class UserService {
 
     changePasswordByEmail = async(email: string, changePasswordDto: ChangePasswordDto): Promise<UserDto | NextResponse> => {
         try {
-            let user = await userDao.getUserByEmail(email);
+            let user = await userDao.getUserByEmail(email.toLowerCase().trim());
             if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
-            const isValid = await isValidPassword(changePasswordDto.oldPassword, user?.password);
-            if(!isValid || changePasswordDto.newPassword !== changePasswordDto.repeatNewPassword) {
+            const isValid = await isValidPassword(changePasswordDto.oldPassword.trim(), user?.password);
+            if(!isValid || changePasswordDto.newPassword.trim() !== changePasswordDto.repeatNewPassword.trim()) {
                 user.login_attempts++
                 await userDao.saveUser(user);
                 return NextResponse.json({ message: "Las password no coinciden.." });
             };
-            user.password = await createHash(changePasswordDto.newPassword);
+            user.password = await createHash(changePasswordDto.newPassword.trim());
             await userDao.saveUser(user);
             const userDto: UserDto = { image: user.image, email: user.email, name: user.name, lastname: user.lastname, phone: user.phone, country: user.country, state: user.state, address: user.address, updated_at: user.updated_at };
             return NextResponse.json({ payload: userDto }, { status: 200 });
@@ -230,6 +233,23 @@ export default class UserService {
             await userDao.saveUser(user);
             return NextResponse.json( info, { status: 200 });
         } catch (error) {
+            return NextResponse.json({ message: "Hubo un problema en el backend.." },{ status: 500 });
+        }
+    };
+
+    recoverPasswordByEmail = async(recoverPasswordDto: RecoverPasswordDto): Promise<NextResponse> => {
+        try {
+            if(!recoverPasswordDto.email) return NextResponse.json({ message: "El campo email es requerido.."}, { status: 400 });
+            let user = await userDao.getUserByEmail(recoverPasswordDto.email.toLowerCase().trim());
+            if (!user) return NextResponse.json({ message: "Usuaio no encontrado.." }, { status: 404 });
+            const password = generateRandomPassword(8);
+            user.password = await createHash(password);
+            const passwordSended = sendPasswordEmail(user, password);
+            if(!passwordSended) return NextResponse.json({ message: "Hubo un problema al enviar la contraseña.." }, { status: 500 });
+            await userDao.saveUser(user);
+            return NextResponse.json({ message: "La nueva contraseña fue enviada a tu email.." }, { status: 200 });
+        } catch (error) {
+            console.error("❌ Error en recoverPasswordByEmail:", error);
             return NextResponse.json({ message: "Hubo un problema en el backend.." },{ status: 500 });
         }
     };
