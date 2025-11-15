@@ -3,10 +3,12 @@ import { createContext, useState, ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import UserInterface from "../interface/user.interface";
 import AuthInterface from "../interface/auth.interface";
+import { Role } from "../enum/role.enum";
 
 export const AuthContext = createContext<AuthInterface | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+
   const [quantityRegistered, setQuantityRegistered] = useState<number>(0);
   const [quantityLogged, setQuantityLogged] = useState<number>(0);
   const [email, setEmail] = useState<string>("");
@@ -66,7 +68,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
       if (response.ok) {
         const data = await response.json();
-        // await usersLogged();
+        await usersLogged();
         await checkSession();
         setEmail("");
         setPassword("");

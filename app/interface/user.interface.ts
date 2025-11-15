@@ -4,8 +4,8 @@ export default interface UserInterface {
   name: string;
   lastname: string;
   phone: string;
-  address: string;
-  state: string;
   country: string;
+  state: string;
+  address: string;
   updated_at: string;
 }
