@@ -5,6 +5,7 @@ import useAuth from "@/app/hooks/useAuth";
 import { Role } from "@/app/enum/role.enum";
 
 export default function Menu({ handleShow }: { handleShow: () => void }) {
+
   const { logoutUser, user, role } = useAuth();
 
   return (

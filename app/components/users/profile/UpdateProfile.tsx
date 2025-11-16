@@ -2,8 +2,8 @@
 import useAuth from "@/app/hooks/useAuth";
 import Title from "@/app/components/Title";
 import Boton from "@/app/components/Boton";
-import SubTitle from "@/app/components/SubTitle";
 import GoBack from "../../GoBack";
+import Cargando from "../../Cargando";
 
 export default function UpdateProfile({ email }: { email: string }) {
   const {
@@ -30,7 +30,7 @@ export default function UpdateProfile({ email }: { email: string }) {
     await updateUserByEmail(email);
   };
 
-  if (!user) return <SubTitle>Primero debes iniciar sesion..</SubTitle>;
+  if (!user) return <Cargando />;
 
   return (
     <form

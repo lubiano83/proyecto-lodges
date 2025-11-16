@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Inicio from "./components/Inicio";
 import { AuthProvider } from "./context/auth.context";
+import { HomeProvider } from "./context/home.context";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -20,16 +21,18 @@ export default function RootLayout({
   return (
     <html lang="es">
       <AuthProvider>
-        <body className="min-h-screen grid grid-rows-[auto_1fr_auto] font-serif bg-(--color3) text-(--color4)">
-          <Inicio
-            email={email}
-            address={address}
-            derechos={derechos}
-            googleMaps={googleMaps}
-          >
-            {children}
-          </Inicio>
-        </body>
+        <HomeProvider>
+          <body className="min-h-screen grid grid-rows-[auto_1fr_auto] font-serif bg-(--color3) text-(--color4)">
+            <Inicio
+              email={email}
+              address={address}
+              derechos={derechos}
+              googleMaps={googleMaps}
+            >
+              {children}
+            </Inicio>
+          </body>
+        </HomeProvider>
       </AuthProvider>
     </html>
   );

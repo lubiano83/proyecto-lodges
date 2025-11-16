@@ -4,15 +4,15 @@ import Boton from "@/app/components/Boton";
 import useAuth from "@/app/hooks/useAuth";
 import Title from "@/app/components/Title";
 import Image from "next/image";
-import GoToLogin from "../../GoToLogin";
 import useCapitalize from "@/app/hooks/useCapitalize";
+import Cargando from "../../Cargando";
 
 export default function Profile() {
   
   const { user } = useAuth();
   const { capitalize, capitalizeEachWord }: any = useCapitalize();
 
-  if (!user) return <GoToLogin />;
+  if (!user) return <Cargando />;
 
   return (
     <div className="flex flex-col justify-center items-center gap-4">
