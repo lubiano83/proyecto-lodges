@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import SvgImage from "../navbar/SvgImage";
+import SvgImage from "../SvgImage";
 import useAuth from "@/app/hooks/useAuth";
 import { Role } from "@/app/enum/role.enum";
 

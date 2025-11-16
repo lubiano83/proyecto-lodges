@@ -32,7 +32,7 @@ export default function Inicio({
         isDarkMode={isDarkMode}
         user={user}
       />
-      <main className="h-full w-full flex flex-col justify-start items-center p-8">
+      <main className="h-full w-full flex flex-col justify-start items-center">
         {show ? <Menu handleShow={handleShow} /> : ""}
         {children}
       </main>

@@ -3,7 +3,6 @@ import { createContext, useState, ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import UserInterface from "../interface/user.interface";
 import AuthInterface from "../interface/auth.interface";
-import { Role } from "../enum/role.enum";
 
 export const AuthContext = createContext<AuthInterface | undefined>(undefined);
 

@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Logo from "../Logo";
-import SvgImage from "./SvgImage";
+import SvgImage from "../SvgImage";
 import UserInterface from "@/app/interface/user.interface";
 import ProfileImage from "../users/profile/ProfileImage";
 
@@ -42,7 +42,7 @@ export default function Navbar({
       )}
       <Link href={"/auth/profile"}>
         <div
-          className={`${user && user?.image ? "bg-(--color3)" : "bg-(--color1)"} aspect-square w-9 h-9 rounded-full overflow-hidden flex justify-center items-center`}
+          className={`${user && user?.image ? "bg-(--color3)" : "bg-(--color1)"} aspect-square w-8 h-8 rounded-full overflow-hidden flex justify-center items-center`}
         >
           {user?.image ? (
             <ProfileImage image={user.image} />

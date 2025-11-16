@@ -5,9 +5,12 @@ import useAuth from "@/app/hooks/useAuth";
 import Title from "@/app/components/Title";
 import Image from "next/image";
 import GoToLogin from "../../GoToLogin";
+import useCapitalize from "@/app/hooks/useCapitalize";
 
 export default function Profile() {
+  
   const { user } = useAuth();
+  const { capitalize, capitalizeEachWord }: any = useCapitalize();
 
   if (!user) return <GoToLogin />;
 
@@ -39,14 +42,13 @@ export default function Profile() {
             <strong>Email:</strong> {user.email}
           </h3>
           <h3>
-            <strong>Nombre:</strong> {user.name} {user.lastname}
+            <strong>Nombre:</strong> {capitalizeEachWord(user.name)} {capitalizeEachWord(user.lastname)}
           </h3>
           <h3>
             <strong>Telefono:</strong> {user.phone}
           </h3>
           <h3>
-            <strong>Direccion:</strong> {user.address}, {user.state},{" "}
-            {user.country}.
+            <strong>Direccion:</strong> {capitalize(user.address)}, {capitalize(user.state)}, {capitalize(user.country)}.
           </h3>
           <h3>
             <strong>Actualizado:</strong>{" "}
