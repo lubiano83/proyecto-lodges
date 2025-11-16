@@ -2,6 +2,8 @@
 import "reflect-metadata";
 import { DataSource } from "typeorm";
 import UserEntity from "../entity/user.entity";
+import HomeInfoEntity from "../entity/home-info.entity";
+import HomeImageEntity from "../entity/home-image.entity";
 
 // Tomamos las variables que SÍ tienes en tu .env
 const { MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE, HOST_DB_PORT } =
@@ -27,7 +29,7 @@ function createDataSource() {
     username: MYSQL_USER, // bootuser
     password: MYSQL_PASSWORD,
     database: MYSQL_DATABASE,
-    entities: [UserEntity],
+    entities: [UserEntity, HomeInfoEntity, HomeImageEntity],
     synchronize: false, // true solo si quieres que TypeORM cree/ajuste tablas en dev
     logging: false,
   });

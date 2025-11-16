@@ -1,5 +1,6 @@
 "use client";
 import Boton from "../../Boton";
+import GoBack from "../../GoBack";
 import Title from "../../Title";
 import useAuth from "@/app/hooks/useAuth";
 
@@ -28,6 +29,7 @@ export default function Recover() {
         className="bg-(--color3) rounded-lg h-8 w-full min-w-72 text-(--color4) px-2 shadow-sm shadow-gray-700"
       />
       <div className="w-full flex justify-center items-center gap-2">
+        <GoBack path="/login" />
         <Boton>Enviar</Boton>
       </div>
     </form>

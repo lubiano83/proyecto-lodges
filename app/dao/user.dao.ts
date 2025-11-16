@@ -1,27 +1,33 @@
+import { Repository } from "typeorm";
 import { getDataSource } from "../config/mysql.config";
 import UserEntity from "../entity/user.entity";
 
 const dataSource = await getDataSource();
-const userRepository = dataSource.getRepository(UserEntity);
 
 export default class UserDao {
+  private userRepository: Repository<UserEntity>;
+
+  constructor() {
+    this.userRepository = dataSource.getRepository(UserEntity);
+  };
+
   getUsers = async () => {
-    return await userRepository.find();
+    return await this.userRepository.find();
   };
 
   getUserByEmail = async (email: string) => {
-    return await userRepository.findOne({ where: { email } });
+    return await this.userRepository.findOne({ where: { email } });
   };
 
   createUser = async (data: any) => {
-    return userRepository.create(data);
+    return this.userRepository.create(data);
   };
 
-  saveUser = async (user: any) => {
-    return userRepository.save(user);
+  saveUser = async (data: any) => {
+    return this.userRepository.save(data);
   };
 
   deleteUser = async (email: string) => {
-    return userRepository.delete({ email });
+    return this.userRepository.delete({ email });
   };
 }
