@@ -533,7 +533,7 @@ export default class UserService {
         );
       await userDao.saveUser(user);
       return NextResponse.json(
-        { message: "La nueva contraseña fue enviada a tu email.." },
+        { message: "Tu nueva contraseña ha sido generada y enviada correctamente." },
         { status: 200 }
       );
     } catch (error) {

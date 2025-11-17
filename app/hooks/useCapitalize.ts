@@ -1,5 +1,3 @@
-import CapitalizeInterface from "../interface/capitalize.interface";
-
 export default function useCapitalize() {
     try {
       const capitalize = (text: string) => {

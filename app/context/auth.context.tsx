@@ -278,6 +278,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (response.ok) {
         const data = await response.json();
         setEmail("");
+        alert(data.message);
         router.push("/login");
       } else {
         const error = await response.json();

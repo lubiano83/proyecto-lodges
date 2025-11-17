@@ -12,11 +12,13 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const email = "lubiano83@gmail.com";
-  const address = "Puente Marchant, Las Trancas, Pinto";
+
+  const title = String(process.env.TITLE);
+  const email = String(process.env.MAIL_USER);
+  const address = String(process.env.ADDRESS);
   const year = new Date().getFullYear();
   const derechos = `© ${year} Todos los derechos reservados`;
-  const googleMaps = "https://maps.app.goo.gl/Hi7eQXZho17VPcEA6";
+  const googleMaps = String(process.env.GOOGLEMAPS);
 
   return (
     <html lang="es">
@@ -24,6 +26,7 @@ export default function RootLayout({
         <HomeProvider>
           <body className="min-h-screen grid grid-rows-[auto_1fr_auto] font-serif bg-(--color3) text-(--color4)">
             <Inicio
+              title={title}
               email={email}
               address={address}
               derechos={derechos}

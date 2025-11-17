@@ -4,11 +4,13 @@ import Contact from "./Contact";
 import Derechos from "./Derechos";
 
 export default function Footer({
+  title,
   email,
   address,
   derechos,
   googleMaps,
 }: {
+  title: string;
   email: string;
   address: string;
   derechos: string;
@@ -19,7 +21,7 @@ export default function Footer({
       <Derechos derechos={derechos} />
       <Address address={address} googleMaps={googleMaps} />
       <Contact email={email} />
-      <Logo />
+      <Logo title={title} />
     </footer>
   );
 }

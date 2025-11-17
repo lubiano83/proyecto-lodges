@@ -6,11 +6,13 @@ import UserInterface from "@/app/interface/user.interface";
 import ProfileImage from "../users/profile/ProfileImage";
 
 export default function Navbar({
+  title,
   toggleDarkMode,
   handleShow,
   isDarkMode,
   user,
 }: {
+  title: string;
   toggleDarkMode: () => void;
   handleShow: () => void;
   isDarkMode: boolean;
@@ -24,7 +26,7 @@ export default function Navbar({
           size={30}
           fnc={handleShow}
         />
-        <Logo />
+        <Logo title={title} />
       </div>
 
       {isDarkMode ? (

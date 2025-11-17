@@ -9,12 +9,14 @@ import useAuth from "../hooks/useAuth";
 
 export default function Inicio({
   children,
+  title,
   email,
   address,
   derechos,
   googleMaps,
 }: {
   children: ReactNode;
+  title: string;
   email: string;
   address: string;
   derechos: string;
@@ -27,6 +29,7 @@ export default function Inicio({
   return (
     <>
       <Navbar
+        title={title}
         toggleDarkMode={toggleDarkMode}
         handleShow={handleShow}
         isDarkMode={isDarkMode}
@@ -37,6 +40,7 @@ export default function Inicio({
         {children}
       </main>
       <Footer
+        title={title}
         email={email}
         address={address}
         derechos={derechos}
