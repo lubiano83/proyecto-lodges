@@ -7,8 +7,8 @@ export default function Module({ children, path }: { children: ReactNode, path: 
     const { capitalizeEachWord  }: any = useCapitalize();
 
     return (
-        <Link href={`${path}${children}`} className="h-25 w-50 bg-(--color1) text-(--color3) flex justify-center items-center rounded-xl shadow-sm shadow-gray-700 border-4 border-(--color3) hover:bg-(--color7)">
-            <h3 className="text-2xl font-bold">{ capitalizeEachWord(children) }</h3>
+        <Link href={path} className="h-25 w-50 bg-(--color1) text-(--color3) flex justify-center items-center rounded-xl shadow-sm shadow-gray-700 border-4 border-(--color3) hover:bg-(--color7)">
+            <h3 className="text-2xl font-bold">{ children }</h3>
         </Link>
     )
 };
