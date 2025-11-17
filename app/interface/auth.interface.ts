@@ -26,6 +26,7 @@ export default interface AuthInterface {
   setPhone: (phone: string) => void;
   registerUser: () => void;
   role: string;
+  setRole: (role: string) => void;
   changeImageByEmail: (email: string) => void;
   image: File | null;
   setImage: (image: File | null) => void;

@@ -1,3 +1,8 @@
+import { Role } from "firebase/ai";
+
 export default class ChangeRoleDto {
-  role: string;
+  
+  email: string;
+  role: Role;
+
 }

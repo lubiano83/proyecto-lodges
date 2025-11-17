@@ -233,30 +233,21 @@ export default class UserService {
   };
 
   changeRoleByEmail = async (
-    email: string,
     changeRoleDto: ChangeRoleDto
-  ): Promise<UserDto | NextResponse> => {
+  ): Promise<NextResponse> => {
     try {
-      let user = await userDao.getUserByEmail(email.toLowerCase().trim());
+      let user = await userDao.getUserByEmail(changeRoleDto.email.toLowerCase().trim());
       if (!user)
         return NextResponse.json(
           { message: "Usuaio no encontrado.." },
           { status: 404 }
         );
-      user.role = changeRoleDto.role.toLowerCase().trim() ?? user.role;
+      const rolesArray = Object.values(Role);
+      const roleFunded = rolesArray.find(role => role === changeRoleDto.role.toLowerCase().trim());
+      if(!roleFunded) return NextResponse.json({ message: "Ese role no esta permitido.." }, { status: 400 });
+      user.role = changeRoleDto.role.toLowerCase().trim();
       await userDao.saveUser(user);
-      const userDto: UserDto = {
-        image: user.image,
-        email: user.email,
-        name: user.name,
-        lastname: user.lastname,
-        phone: user.phone,
-        country: user.country,
-        state: user.state,
-        address: user.address,
-        updated_at: user.updated_at,
-      };
-      return NextResponse.json({ payload: userDto }, { status: 200 });
+      return NextResponse.json({ message: `El role fue cambiado con exito..` }, { status: 200 });
     } catch (error) {
       return NextResponse.json(
         { message: "Hubo un problema en el backend.." },

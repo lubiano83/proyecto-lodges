@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [country, setCountry] = useState<string>("");
   const [state, setState] = useState<string>("");
   const [address, setAddress] = useState<string>("");
-  const [role, setRole] = useState<string>("user");
+  const [role, setRole] = useState<string>("");
   const [image, setImage] = useState<File | null>(null);
   const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
@@ -290,18 +290,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const changeRoleByEmail = async (email: string) => {
+  const changeRoleByEmail = async() => {
     try {
-      const response = await fetch(`/api/admin/${email}`, {
+      const response = await fetch(`/api/admin`, {
         method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, role }),
       });
       if (response.ok) {
-        const data = response.json();
+        const data = await response.json();
         await getUserByEmail(email);
+        setEmail("");
+        setRole("");
+        alert(data.message);
         router.push("/admin");
-        return data;
       } else {
         const error = await response.json();
+        setEmail("");
+        setRole("");
         alert(error.message);
       }
     } catch (error) {
@@ -337,6 +343,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setPhone,
         registerUser,
         role,
+        setRole,
         changeImageByEmail,
         image,
         setImage,
