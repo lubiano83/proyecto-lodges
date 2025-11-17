@@ -50,10 +50,10 @@ export default class HomeService {
                 console.log("primera imagen:", image)
                 await homeDao.deleteImage(image.id);
             }
-            console.log("imagenes:", images);
             const newImage = new AddImageDto(
                 addImageDto.image
             );
+            
             await homeDao.saveImage(newImage);
             return NextResponse.json({ payload: newImage }, { status: 201 });
         } catch (error) {

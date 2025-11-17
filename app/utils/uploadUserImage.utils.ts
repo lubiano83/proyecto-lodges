@@ -13,9 +13,9 @@ export async function uploadUserImage(
       action: "read",
       expires: "2100-01-01",
     });
-    const versionedUrl = `${url}&v=${Date.now()}`; // 👈 anti caché
+    const versionedUrl = `${url}&v=${Date.now()}`;
     return versionedUrl;
   } catch (error) {
     console.log(error);
   }
-}
+};
