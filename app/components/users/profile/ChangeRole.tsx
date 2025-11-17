@@ -38,7 +38,7 @@ export default function ChangeRole() {
                 className="bg-(--color3) rounded-lg h-8 w-full min-w-72 text-(--color4) px-2 shadow-sm shadow-gray-700"
               />
               <div className="w-full flex justify-center items-center gap-2">
-                <GoBack path="/admin" />
+                <GoBack path="/admin/users" />
                 <Boton>Modificar</Boton>
               </div>
             </form>
